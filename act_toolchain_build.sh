@@ -12,6 +12,10 @@ if [ -z $ACT_HOME ]; then
   export ACT_HOME=$(pwd)/act
 fi
 
+if [ -z $LIB_HOME ]; then 
+  export LIB_HOME=$(pwd)/build
+fi
+
 if [ -z $VLSI_TOOLS_SRC ]; then 
   export VLSI_TOOLS_SRC=$EDA_SRCDIR/yale-asyncvlsi-act
 fi

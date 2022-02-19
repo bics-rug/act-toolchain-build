@@ -21,13 +21,39 @@ make -j || exit 1
 make install || exit 1
 
 echo "#############################"
+echo "# ncurses"
+if [ ! -d "$EDA_SRCDIR/ncurses" ]; then
+  cd $EDA_SRCDIR
+  echo "download & check"
+  wget --quiet https://invisible-mirror.net/archives/ncurses/ncurses-6.3.tar.gz
+  echo "97fc51ac2b085d4cde31ef4d2c3122c21abc217e9090a43a30fc5ec21684e059 ncurses-6.3.tar.gz" | sha256sum --check || exit 1
+  mkdir $EDA_SRCDIR/ncurses
+  tar -C "$EDA_SRCDIR/ncurses" --strip-components=1 -xf ncurses-6.3.tar.gz
+  rm ncurses-6.3.tar.gz
+fi
+cd $EDA_SRCDIR/ncurses
+#this is for the ci because i cant convice libedit to pic up th custom dir, it will fail on normal systems
+#./configure --with-shared --without-debug || exit 1
+#make -j || exit 1
+#make install 
+
+./configure --with-shared --without-debug --prefix $ACT_HOME || exit 1
+make -j || exit 1
+make install || exit 1
+
+echo "#############################"
 echo "# libedit"
 if [ ! -d "$EDA_SRCDIR/libedit" ]; then
   cd $EDA_SRCDIR
-  git clone https://salsa.debian.org/debian/libedit.git
+  echo "download & check"
+  wget --quiet --no-check-certificate https://www.thrysoee.dk/editline/libedit-20210910-3.1.tar.gz 
+  echo "6792a6a992050762edcca28ff3318cdb7de37dccf7bc30db59fcd7017eed13c5 libedit-20210910-3.1.tar.gz" | sha256sum --check || exit 1
+  mkdir $EDA_SRCDIR/libedit
+  tar -C "$EDA_SRCDIR/libedit" --strip-components=1 -xf libedit-20210910-3.1.tar.gz
+  rm libedit-20210910-3.1.tar.gz
 fi
 cd "$EDA_SRCDIR/libedit"
-git reset --hard && git checkout master && git pull
-./configure --prefix $ACT_HOME || exit 1
+autoreconf --force --include=$ACT_HOME/include
+./configure --prefix $ACT_HOME LIBS="-L$ACT_HOME/lib ${LIBS}" CPPFLAGS="-I$ACT_HOME/include -I$ACT_HOME/include/ncurses ${CPPFLAGS}" LDFLAGS="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib" || exit 1
 make -j || exit 1
 make install || exit 1

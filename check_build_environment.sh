@@ -13,18 +13,30 @@ if [ -z $ACT_HOME ]; then
   exit 1
 fi
 
+if [ -z $LIB_HOME ]; then
+  echo "Note LIB_HOME is not defind, please define before compiling"
+fi
+
 if [ -z $VLSI_TOOLS_SRC ]; then
   echo "please load environment variables first => VLSI_TOOLS_SRC the act src dir"
   exit 1
 fi
 
 #use centos 7 as baseline versions (devtools-7) @TODO use a better method to check
+echo "gcc version"
 command -v gcc > /dev/null && gcc --version | awk '/gcc/ && ($3+0)<7{print "gcc to old"; exit 1}' || exit 1
+echo "m4"
 command -v m4  > /dev/null || exit 1
-command -v autoconf || exit 1
+echo "autoreconf"
+command -v autoreconf > /dev/null || exit 1
+echo "aclocal"
+command -v aclocal > /dev/null || exit 1
+echo "make"
 command -v make > /dev/null || exit 1
+echo "git"
 command -v git > /dev/null || exit 1
+echo "wget"
 command -v wget > /dev/null || exit 1
 
-mkdir $ACT_HOME
-mkdir $EDA_SRCDIR
+mkdir -p $ACT_HOME
+mkdir -p $EDA_SRCDIR

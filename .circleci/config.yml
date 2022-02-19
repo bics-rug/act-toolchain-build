@@ -1,4 +1,4 @@
-version: 2
+version: 2.2
 
 jobs:
    centos7:
@@ -6,80 +6,105 @@ jobs:
        - image: centos:7
      steps:
        - checkout
+       - restore_cache:
+          keys: 
+               - v1-dependencies
        - run:
           name: check build tools
           command: |
-               yum install -y centos-release-scl
+               set +e
+               date
+               yum install -y centos-release-scl git wget
                yum-config-manager --enable rhel-server-rhscl-7-rpms
-               yum install -y devtoolset-8
-	       source ci_centos7_environment.sh
-	       bash check_build_environment.sh || exit 1
-	       cd $EXECDIR
+               echo "repo setup"
+               echo "yum install -y devtoolset-8 m4 autoconf automake | cat" | bash
+               echo "install done"
+               source ci_centos7_build_environment.sh
+               echo "environment done"
+               bash check_build_environment.sh || exit 1
+               cd $EXECDIR
+       - save_cache:
+          key: v1-yum-downloads
+          paths:
+              - /var/cache/yum
        - run: 
           name: Install act dependencies
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-act-dependencies.sh || exit 1
+              echo $ACT_HOME
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-act-dependencies.sh || exit 1
               cd $EXECDIR
        - run: 
           name: Install act
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-act.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-act.sh || exit 1
               cd $EXECDIR
        - run: 
           name: Install act stdlib
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-stdlib.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-stdlib.sh || exit 1
               cd $EXECDIR
        - run: 
           name: Install rug dataflow classic lib
           command: |
-              source ci_centos7_environment.sh
-	      bash rug-bics-actlib_dataflow_neuro.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash rug-bics-actlib_dataflow_neuro.sh || exit 1
               cd $EXECDIR
        - run: 
           name: Install expropt com (if availble)
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-avlsi-expropt.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-avlsi-expropt.sh || exit 1
               cd $EXECDIR
        - run: 
           name: Install expropt dependencies (if nessesary)
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-expropt-dependencies.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-expropt-dependencies.sh || exit 1
               cd $EXECDIR  
        - run: 
           name: Install expropt (if availble)
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-expropt.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-expropt.sh || exit 1
               cd $EXECDIR   
        - run: 
           name: Install chp2prs
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-chp2prs.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-chp2prs.sh || exit 1
               cd $EXECDIR
        - run: 
           name: Install interact
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-interact.sh || exit 1
+              set +e
+              source ci_centos7_build_environment.sh
+              bash yale-asyncvlsi-interact.sh || exit 1
               cd $EXECDIR
        - run: 
           name: test act
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-act-test.sh || exit 1
+              set +e
+              rm -rf build
+              source ci_centos7_test_environment.sh
+              bash yale-asyncvlsi-act-test.sh 
               cd $EXECDIR
        - run: 
           name: test chp2prs
           command: |
-              source ci_centos7_environment.sh
-	      bash yale-asyncvlsi-act-test.sh || exit 1
+              set +e
+              source ci_centos7_test_environment.sh
+              bash yale-asyncvlsi-chp2prs-test.sh 
               cd $EXECDIR
               
 # package and upload
@@ -89,4 +114,15 @@ workflows:
    build:
      jobs: 
         - centos7
+   nightly:
+    triggers:
+     - schedule:
+         # Every day, 0421Z.
+         cron: "30 8 * * *"
+         filters:
+           branches:
+             only:
+               - main
+    jobs:     
+      - centos7
 
