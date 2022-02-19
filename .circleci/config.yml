@@ -23,10 +23,7 @@ jobs:
                echo "environment done"
                bash check_build_environment.sh || exit 1
                cd $EXECDIR
-       - save_cache:
-          key: v1-yum-downloads
-          paths:
-              - /var/cache/yum
+
        - run: 
           name: Install act dependencies
           command: |
@@ -35,6 +32,14 @@ jobs:
               source ci_centos7_build_environment.sh
               bash yale-asyncvlsi-act-dependencies.sh || exit 1
               cd $EXECDIR
+              
+       - save_cache:
+          key: v1-dependencies
+          paths:
+              - /var/cache/yum
+              - $CIRCLE_WORKING_DIRECTORY/src/libedit
+              - $CIRCLE_WORKING_DIRECTORY/src/ncurses
+              - $CIRCLE_WORKING_DIRECTORY/src/zlib
        - run: 
           name: Install act
           command: |
@@ -95,16 +100,15 @@ jobs:
           name: test act
           command: |
               set +e
-              rm -rf build
               source ci_centos7_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh 
+              bash yale-asyncvlsi-act-test.sh || exit 1
               cd $EXECDIR
        - run: 
           name: test chp2prs
           command: |
               set +e
               source ci_centos7_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh 
+              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
               cd $EXECDIR
               
 # package and upload
