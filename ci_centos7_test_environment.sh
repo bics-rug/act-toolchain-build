@@ -3,6 +3,7 @@ echo "environment variables "
 if [ -z $EDA_SRCDIR ]; then 
   export EDA_SRCDIR=$(pwd)/src
 fi
+echo "EDA_SRCDIR $EDA_SRCDIR"
 
 if [ -z $ACT_HOME ]; then 
   # moving the install folder, to test if the dynamic linking works on relative pathses
@@ -11,14 +12,18 @@ if [ -z $ACT_HOME ]; then
   fi
   export ACT_HOME=$(pwd)/acttest
 fi
+echo "ACT_HOME $ACT_HOME"
 
 if [ -z $VLSI_TOOLS_SRC ]; then 
   export VLSI_TOOLS_SRC=$EDA_SRCDIR/yale-asyncvlsi-act
 fi
-echo "."
-export PATH=${ACT_HOME}/bin:${PATH}
+echo "VLSI_TOOLS_SRC $VLSI_TOOLS_SRC"
 
-echo "."
+export PATH=${ACT_HOME}/bin:${PATH}
+echo "PATH $PATH"
+
+echo "LD_LIBRARY_PATH $LD_LIBRARY_PATH"
+
 export EXECDIR=$(pwd)
 echo "loaded"
 
