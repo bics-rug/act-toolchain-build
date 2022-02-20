@@ -24,6 +24,8 @@ echo "PATH $PATH"
 
 echo "LD_LIBRARY_PATH $LD_LIBRARY_PATH"
 
-export EXECDIR=$(pwd)
+export WORK_DIR=$(pwd)
+echo "WORK_DIR $WORK_DIR"
+ls -la
 echo "loaded"
 

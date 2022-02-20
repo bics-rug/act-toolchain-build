@@ -22,5 +22,7 @@ if [ -z $VLSI_TOOLS_SRC ]; then
 fi
 echo "VLSI_TOOLS_SRC $VLSI_TOOLS_SRC"
 
-export EXECDIR=$(pwd)
+export WORK_DIR=$(pwd)
+echo "WORK_DIR $WORK_DIR"
+ls -la
 echo "loaded"
