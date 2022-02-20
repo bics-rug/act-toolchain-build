@@ -1,6 +1,7 @@
 # Builder for path and (almost) library independent ACT tool chain (https://github.com/asyncvlsi)
 
-[![CircleCI](https://circleci.com/gh/bics-rug/act-toolchain-build/tree/main.svg?style=svg)](https://circleci.com/gh/bics-rug/act-toolchain-build/tree/main)
+[![CircleCI](https://circleci.com/gh/bics-rug/act-toolchain-build/tree/main.svg?style=svg)](https://circleci.com/gh/bics-rug/act-toolchain-build/tree/main) build tested on bare installs of centos/RHEL 7, Ubuntu 18.04LTS, Ubuntu 20.04LTS, Debian oldstale and Debain stable.
+
 
 The goal of this project is to have a package ready $ACT\_HOME directory that you can drop on almost any gnu/linux OS (for the CI build any OS newer than 2013) and start working after setting 2 variables $ACT\_HOME and $PATH. A bit like the other commercial EDA tools.
 

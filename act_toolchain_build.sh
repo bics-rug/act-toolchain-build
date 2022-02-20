@@ -20,6 +20,16 @@ if [ -z $VLSI_TOOLS_SRC ]; then
   export VLSI_TOOLS_SRC=$EDA_SRCDIR/yale-asyncvlsi-act
 fi
 
+echo "#############################################################################################"
+echo "Please be aware that this script will DELETE all changes you made to any of the source files "
+echo "in $EDA_SRCDIR (that you did not commit)"
+echo "if you want to proceed type iamsure:"
+read userconfirm
+
+if [[ $userconfirm != "iamsure" ]]; then
+    exit 1
+fi
+
 bash check_build_environment.sh || exit 1
 
 bash yale-asyncvlsi-act-dependencies.sh || exit 1

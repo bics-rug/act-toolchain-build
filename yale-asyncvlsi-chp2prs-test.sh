@@ -1,7 +1,16 @@
 #!/bin/bash
 
 echo "#############################"
-echo "# testing chp2prs"
+echo "# chp2prs test binaries"
+
+source test_helper.sh
+
+lookup_binary "chp2prs"
+lookup_shared_library "libactchp2prspass.so"
+
+
+echo "#############################"
+echo "# chp2prs test suit"
 
 cd $EDA_SRCDIR/yale-asyncvlsi-chp2prs
 

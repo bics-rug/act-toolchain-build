@@ -141,6 +141,13 @@ jobs:
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
               cd $WORK_DIR
+       - run: 
+          name: Test interact
+          command: |
+              set +e
+              source ci_test_environment.sh
+              bash yale-asyncvlsi-interact-test.sh || exit 1
+              cd $WORK_DIR
               
    test-rhel8:
      docker:
@@ -170,6 +177,13 @@ jobs:
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
               cd $WORK_DIR
+       - run: 
+          name: Test interact
+          command: |
+              set +e
+              source ci_test_environment.sh
+              bash yale-asyncvlsi-interact-test.sh || exit 1
+              cd $WORK_DIR
               
    test-ubuntu18:
      docker:
@@ -197,6 +211,13 @@ jobs:
               set +e
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
+              cd $WORK_DIR
+       - run: 
+          name: Test interact
+          command: |
+              set +e
+              source ci_test_environment.sh
+              bash yale-asyncvlsi-interact-test.sh || exit 1
               cd $WORK_DIR
               
    test-ubuntu20:
@@ -226,6 +247,13 @@ jobs:
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
               cd $WORK_DIR
+       - run: 
+          name: Test interact
+          command: |
+              set +e
+              source ci_test_environment.sh
+              bash yale-asyncvlsi-interact-test.sh || exit 1
+              cd $WORK_DIR
               
    test-debian-stable:
      docker:
@@ -253,6 +281,13 @@ jobs:
               set +e
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
+              cd $WORK_DIR
+       - run: 
+          name: Test interact
+          command: |
+              set +e
+              source ci_test_environment.sh
+              bash yale-asyncvlsi-interact-test.sh || exit 1
               cd $WORK_DIR
 
    test-debian-oldstable:
@@ -282,6 +317,13 @@ jobs:
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
               cd $WORK_DIR
+       - run: 
+          name: Test interact
+          command: |
+              set +e
+              source ci_test_environment.sh
+              bash yale-asyncvlsi-interact-test.sh || exit 1
+              cd $WORK_DIR
               
    test-alpine:
      docker:
@@ -310,34 +352,13 @@ jobs:
               source ci_test_environment.sh
               bash yale-asyncvlsi-chp2prs-test.sh || exit 1
               cd $WORK_DIR
-
-   test-archlinux:
-     docker:
-       - image: archlinux:latest
-     resource_class: small
-     steps:
-       - checkout
-       - attach_workspace:
-          at: ./
        - run: 
-          name: install test runner
-          command: |
-              pacman -S make
-       - run: 
-          name: Test act
+          name: Test interact
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
+              bash yale-asyncvlsi-interact-test.sh || exit 1
               cd $WORK_DIR
-       - run: 
-          name: Test chp2prs
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-
 
 workflows:
    version: 2
@@ -347,9 +368,10 @@ workflows:
         -  test-centos7:
              requires:
                - build-centos7
-        -  test-rhel8:
-             requires:
-               - build-centos7
+        # test runner not working
+        #-  test-rhel8:
+        #     requires:
+        #       - build-centos7
         -  test-debian-stable:
              requires:
                - build-centos7
@@ -362,13 +384,10 @@ workflows:
         -  test-ubuntu18:
              requires:
                - build-centos7   
-        -  test-alpine:
-             requires:
-               - build-centos7  
-        -  test-archlinux:
-             requires:
-               - build-centos7  
-               
+        # for testing fully lib independed only libc
+        #-  test-alpine:
+        #     requires:
+        #       - build-centos7  
                
    nightly:
     triggers:
@@ -384,9 +403,10 @@ workflows:
         -  test-centos7:
              requires:
                - build-centos7
-        -  test-rhel8:
-             requires:
-               - build-centos7
+        # test runner not working
+        #-  test-rhel8:
+        #     requires:
+        #       - build-centos7
         -  test-debian-stable:
              requires:
                - build-centos7
@@ -399,7 +419,4 @@ workflows:
         -  test-ubuntu18:
              requires:
                - build-centos7    
-        -  test-archlinux:
-             requires:
-               - build-centos7  
 

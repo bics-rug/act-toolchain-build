@@ -1,12 +1,47 @@
 #!/bin/bash
 
 echo "#############################"
-echo "# testing act"
+echo "# act test binaries"
+
+source test_helper.sh
+
+lookup_binary "act2v"
+lookup_binary "act-test"
+lookup_binary "adepend"
+lookup_binary "aflat"
+lookup_binary "atrace"
+lookup_binary "ext2sp"
+lookup_binary "pgen"
+lookup_binary "prs2cells"
+lookup_binary "prs2net"
+lookup_binary "prs2sim"
+lookup_binary "prsim"
+lookup_binary "prspack"
+lookup_binary "sv2act"
+lookup_binary "act2v"
+lookup_binary "techgen"
+lookup_binary "test_inlinepass"
+lookup_binary "test_statepass"
+lookup_binary "tlint"
+lookup_binary "tr2alint"
+lookup_binary "v2act"
+
+lookup_shared_library "libactpass_sh.so"
+lookup_shared_library "libvlsilib_sh.so"
+lookup_shared_library "libact_sh.so"
+
+
+echo "#############################"
+echo "# act testsuit"
 
 cd $VLSI_TOOLS_SRC
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/validate_subdir.sh
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/run_subdir_vg.sh
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/run_subdir.sh
+
+sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/print/validate.sh
+sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/print/run_vg.sh
+sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/print/run.sh
 
 sed -i 's/ACTTOOL=..\/v2act.$EXT/ACTTOOL=v2act/' transform/v2act/test/run.sh
 sed -i 's/ACTTOOL=..\/v2act.$EXT/ACTTOOL=v2act/' transform/v2act/test/run_vg.sh
