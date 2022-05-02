@@ -7,13 +7,12 @@ fi
 echo "#############################"
 echo "# expropt"
 
-if [ ! -d "$EDA_SRCDIR/yale-asyncvlsi-expropt" ]; then
-cd $EDA_SRCDIR
-  git clone $ACT_ASYNCVLSI_EXPROPT_URL
-  mv expropt yale-asyncvlsi-expropt
-fi
 cd $EDA_SRCDIR/yale-asyncvlsi-expropt
-git reset --hard && git checkout main && git pull
+if [ -z $FORCE_GIT_RESET ]; then
+   git reset --hard && git checkout main && git pull
+else
+   git pull
+fi
 ./configure || exit 1
 make realclean 2> /dev/null
 make depend 

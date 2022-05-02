@@ -2,3 +2,5 @@ src/*
 act/*
 build/*
 acttest/*
+cmake/*
+*.tar.gz

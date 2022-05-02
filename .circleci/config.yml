@@ -3,12 +3,13 @@ version: 2.2
 jobs:
    build-centos7:
      docker:
-       - image: centos:7
+     # use an old image for compatibity of binaries
+       - image: centos:7.2.1511
      steps:
        - checkout
        - restore_cache:
           keys: 
-               - v1-dependencies
+               - v2-dependencies
        - run:
           name: check build tools
           command: |
@@ -17,87 +18,93 @@ jobs:
                yum install -y centos-release-scl git wget
                yum-config-manager --enable rhel-server-rhscl-7-rpms
                echo "repo setup"
-               echo "yum install -y devtoolset-8 m4 autoconf automake | cat" | bash
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool | cat" | bash
                echo "install done"
                source ci_build_environment_centos7.sh
                echo "environment done"
                bash check_build_environment.sh || exit 1
                cd $WORK_DIR
-
        - run: 
-          name: Install act dependencies
+          name: build cmake
           command: |
-              echo $ACT_HOME
               set +e
               source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-act-dependencies.sh || exit 1
+              mkdir $ACT_HOME
+              mkdir $EDA_SRCDIR
+              for file in 0*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-              
+       - run: 
+          name: download sources
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 1*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
        - save_cache:
-          key: v1-dependencies
+          key: v2-dependencies
           paths:
               - /var/cache/yum
               - $CIRCLE_WORKING_DIRECTORY/src/libedit
               - $CIRCLE_WORKING_DIRECTORY/src/ncurses
               - $CIRCLE_WORKING_DIRECTORY/src/zlib
+              - $CIRCLE_WORKING_DIRECTORY/src/mit-fftw-fftw
+              - $CIRCLE_WORKING_DIRECTORY/src/openmpi
+              - $CIRCLE_WORKING_DIRECTORY/cmake
        - run: 
-          name: Install act
+          name: package sources
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-act.sh || exit 1
+              for file in 2*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR       
+
+       - run: 
+          name: Install dependencies
+          command: |
+              echo $ACT_HOME
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 3*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+              
+       - run: 
+          name: Install act and libs
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 4*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+    
+       - run: 
+          name: Install act addons FE / syntesis
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 5*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - run: 
-          name: Install act stdlib
+          name: Install act addons BE / physical design
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-stdlib.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Install rug dataflow classic lib
-          command: |
-              set +e
-              source ci_build_environment_centos7.sh
-              bash rug-bics-actlib_dataflow_neuro.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Install expropt com (if availble)
-          command: |
-              set +e
-              source ci_build_environment_centos7.sh
-              bash yale-avlsi-expropt.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Install expropt dependencies (if nessesary)
-          command: |
-              set +e
-              source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-expropt-dependencies.sh || exit 1
+              for file in 6*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR  
-       - run: 
-          name: Install expropt (if availble)
-          command: |
-              set +e
-              source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-expropt.sh || exit 1
-              cd $WORK_DIR   
-       - run: 
-          name: Install chp2prs
-          command: |
-              set +e
-              source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-chp2prs.sh || exit 1
-              cd $WORK_DIR
        - run: 
           name: Install interact
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              bash yale-asyncvlsi-interact.sh || exit 1
-              cd $WORK_DIR
+              for file in 7*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR   
+       - run: 
+          name: package and upload
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR   
        - run:
-          name: Clean and Package
+          name: Clean for persist
           command: |
               set +e
               source ci_build_environment_centos7.sh
@@ -132,21 +139,27 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
+              
+   test-centos7.2:
+     docker:
+       - image: centos:7.2.151
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
        - run: 
-          name: Test chp2prs
+          name: install test runner
+          command: |
+               yum install -y make
+       - run: 
+          name: Test act
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-rhel8:
@@ -168,21 +181,7 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test chp2prs
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu18:
@@ -203,21 +202,7 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test chp2prs
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu20:
@@ -238,22 +223,9 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-       - run: 
-          name: Test chp2prs
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
-              cd $WORK_DIR
+
               
    test-debian-stable:
      docker:
@@ -273,21 +245,7 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test chp2prs
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
    test-debian-oldstable:
@@ -308,23 +266,28 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
+   test-debian-oldoldstable:
+     docker:
+       - image: debian:oldoldstable
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
        - run: 
-          name: Test chp2prs
+          name: install test runner
+          command: |
+                apt-get -q update -y
+                apt-get -q install -y make
+       - run: 
+          name: Test act
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
-              cd $WORK_DIR
-              
+              for file in 9*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR              
    test-alpine:
      docker:
        - image: alpine:latest
@@ -343,21 +306,7 @@ jobs:
           command: |
               set +e
               source ci_test_environment.sh
-              bash yale-asyncvlsi-act-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test chp2prs
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-chp2prs-test.sh || exit 1
-              cd $WORK_DIR
-       - run: 
-          name: Test interact
-          command: |
-              set +e
-              source ci_test_environment.sh
-              bash yale-asyncvlsi-interact-test.sh || exit 1
+              for file in 9*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
 workflows:
@@ -368,6 +317,9 @@ workflows:
         -  test-centos7:
              requires:
                - build-centos7
+        -  test-centos7.2:
+             requires:
+               - build-centos7
         # test runner not working
         #-  test-rhel8:
         #     requires:
@@ -376,6 +328,9 @@ workflows:
              requires:
                - build-centos7
         -  test-debian-oldstable:
+             requires:
+               - build-centos7
+        -  test-debian-oldoldstable:
              requires:
                - build-centos7
         -  test-ubuntu20:

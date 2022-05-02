@@ -1,6 +1,6 @@
 echo "environment variables "
-source scl_source enable devtoolset-8
-echo "devtoolset-8 active"
+source scl_source enable devtoolset-11
+echo "devtoolset-11 active"
 
 if [ -z $EDA_SRCDIR ]; then 
   export EDA_SRCDIR=$(pwd)/src
@@ -9,6 +9,7 @@ echo "EDA_SRCDIR $EDA_SRCDIR"
 
 if [ -z $ACT_HOME ]; then 
   export ACT_HOME=$(pwd)/act
+  export PATH=${ACT_HOME}/bin:${PATH}
 fi
 echo "ACT_HOME $ACT_HOME"
 
@@ -24,5 +25,8 @@ echo "VLSI_TOOLS_SRC $VLSI_TOOLS_SRC"
 
 export WORK_DIR=$(pwd)
 echo "WORK_DIR $WORK_DIR"
+
+export FORCE_GIT_RESET="true"
+
 ls -la
 echo "loaded"

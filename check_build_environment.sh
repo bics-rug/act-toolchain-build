@@ -22,9 +22,15 @@ if [ -z $VLSI_TOOLS_SRC ]; then
   exit 1
 fi
 
-#use centos 7 as baseline versions (devtools-7) @TODO use a better method to check
+#use centos 7 as baseline versions (devtools-9) @TODO use a better method to check
 echo "gcc version"
-command -v gcc > /dev/null && gcc --version | awk '/gcc/ && ($3+0)<7{print "gcc to old"; exit 1}' || exit 1
+command -v gcc > /dev/null && gcc --version | awk '/gcc/ && ($3+0)<9{print "gcc to old"; exit 1}' || exit 1
+echo "gfortran"
+command -v gfortran  > /dev/null || exit 1
+echo "flex"
+command -v flex  > /dev/null || exit 1
+echo "bison"
+command -v bison  > /dev/null || exit 1
 echo "m4"
 command -v m4  > /dev/null || exit 1
 echo "autoreconf"

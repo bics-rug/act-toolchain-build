@@ -28,16 +28,16 @@ CentOS7 / RHEL7 / derivatives
 ```
 yum install -y centos-release-scl git wget
 yum-config-manager --enable rhel-server-rhscl-7-rpms
-yum install -y devtoolset-8 m4 autoconf automake
+yum install -y devtoolset-11 m4 autoconf automake flex bison
 
-source scl_source enable devtoolset-8
+source scl_source enable devtoolset-11
 ```
 
 RockyLinux8 / RHEL8 / derivatives / CentOS Stream (to be confirmed)
 ```
 yum install -y 'dnf-command(config-manager)'
 yum config-manager --set-enabled powertools -y
-yum install -y gcc gcc-c++ diffutils make m4 autoconf automake git wget
+yum install -y gcc gcc-c++ diffutils make m4 autoconf automake git wget flex bison
 ```
 
 Debian / Ubuntu
