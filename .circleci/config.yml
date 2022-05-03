@@ -9,7 +9,7 @@ jobs:
        - checkout
        - restore_cache:
           keys: 
-               - v2-dependencies
+               - v3-dependencies
        - run:
           name: check build tools
           command: |
@@ -41,15 +41,15 @@ jobs:
               for file in 1*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - save_cache:
-          key: v2-dependencies
+          key: v3-dependencies
           paths:
               - /var/cache/yum
-              - $CIRCLE_WORKING_DIRECTORY/src/libedit
-              - $CIRCLE_WORKING_DIRECTORY/src/ncurses
-              - $CIRCLE_WORKING_DIRECTORY/src/zlib
-              - $CIRCLE_WORKING_DIRECTORY/src/mit-fftw-fftw
-              - $CIRCLE_WORKING_DIRECTORY/src/openmpi
-              - $CIRCLE_WORKING_DIRECTORY/cmake
+              - src/libedit
+              - src/ncurses
+              - src/zlib
+              - src/mit-fftw-fftw
+              - src/openmpi
+              - cmake
        - run: 
           name: package sources
           command: |
@@ -97,12 +97,12 @@ jobs:
               for file in 7*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR   
        - run: 
-          name: package and upload
+          name: Test act
           command: |
               set +e
-              source ci_build_environment_centos7.sh
+              source ci_test_environment.sh
               for file in 8*; do echo $file; bash $file || exit 1; done
-              cd $WORK_DIR   
+              cd $WORK_DIR
        - run:
           name: Clean for persist
           command: |
@@ -118,11 +118,10 @@ jobs:
           paths:
             - src/yale-asyncvlsi-act
             - src/yale-asyncvlsi-chp2prs
-            - act      
+            - async_circuit_toolkit_sources.tar.gz
+            - async_circuit_toolkit.tar.gz      
 # package and upload
-
-
-   test-centos7:
+   upload-centos7:
      docker:
        - image: centos:7
      resource_class: small
@@ -131,20 +130,16 @@ jobs:
        - attach_workspace:
           at: ./
        - run: 
-          name: install test runner
-          command: |
-               yum install -y make
-       - run: 
-          name: Test act
+          name: upload
           command: |
               set +e
-              source ci_test_environment.sh
+              source ci_build_environment_centos7.sh
               for file in 9*; do echo $file; bash $file || exit 1; done
-              cd $WORK_DIR
-              
-   test-centos7.2:
+              cd $WORK_DIR   
+
+   test-centos7:
      docker:
-       - image: centos:7.2.151
+       - image: centos:7.2.1511
      resource_class: small
      steps:
        - checkout
@@ -158,9 +153,11 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
+             
               
    test-rhel8:
      docker:
@@ -180,8 +177,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu18:
@@ -201,8 +199,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu20:
@@ -222,8 +221,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
               
@@ -244,8 +244,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
    test-debian-oldstable:
@@ -265,8 +266,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
    test-debian-oldoldstable:
      docker:
@@ -285,8 +287,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR              
    test-alpine:
      docker:
@@ -305,8 +308,9 @@ jobs:
           name: Test act
           command: |
               set +e
+              tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
 workflows:
@@ -315,9 +319,6 @@ workflows:
      jobs: 
         -  build-centos7
         -  test-centos7:
-             requires:
-               - build-centos7
-        -  test-centos7.2:
              requires:
                - build-centos7
         # test runner not working
@@ -368,10 +369,22 @@ workflows:
         -  test-debian-oldstable:
              requires:
                - build-centos7
+        -  test-debian-oldoldstable:
+             requires:
+               - build-centos7
         -  test-ubuntu20:
              requires:
                - build-centos7   
         -  test-ubuntu18:
              requires:
-               - build-centos7    
+               - build-centos7
+        -  upload-centos7:
+             requires:
+               - build-centos7
+               - test-centos7
+               - test-debian-stable
+               - test-debian-oldstable
+               - test-debian-oldoldstable
+               - test-ubuntu20
+               - test-ubuntu18    
 

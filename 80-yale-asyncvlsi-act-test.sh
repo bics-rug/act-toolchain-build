@@ -34,6 +34,9 @@ lookup_shared_library "libact_sh.so"
 echo "#############################"
 echo "# act testsuit"
 
+## the tests need to be pached to use the installed binaries
+echo " patching tests "
+
 cd $VLSI_TOOLS_SRC
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/validate_subdir.sh
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/run_subdir_vg.sh
@@ -43,6 +46,10 @@ sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/print/validate.sh
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/print/run_vg.sh
 sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/print/run.sh
 
+sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/dl/validate.sh
+sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/dl/run_vg.sh
+sed -i 's/ACT=..\/act-test.$EXT/ACT=act-test/' act/test/dl/run.sh
+
 sed -i 's/ACTTOOL=..\/v2act.$EXT/ACTTOOL=v2act/' transform/v2act/test/run.sh
 sed -i 's/ACTTOOL=..\/v2act.$EXT/ACTTOOL=v2act/' transform/v2act/test/run_vg.sh
 sed -i 's/ACTTOOL=..\/v2act.$EXT/ACTTOOL=v2act/' transform/v2act/test/validate.sh
@@ -50,6 +57,14 @@ sed -i 's/ACTTOOL=..\/v2act.$EXT/ACTTOOL=v2act/' transform/v2act/test/validate.s
 sed -i 's/ACTTOOL=..\/test_inlinepass.$EXT/ACTTOOL=test_inlinepass/' transform/testing/inline/test/run.sh
 sed -i 's/ACTTOOL=..\/test_inlinepass.$EXT/ACTTOOL=test_inlinepass/' transform/testing/inline/test/run_vg.sh
 sed -i 's/ACTTOOL=..\/test_inlinepass.$EXT/ACTTOOL=test_inlinepass/' transform/testing/inline/test/validate.sh
+
+sed -i 's/ACTTOOL=..\/test_mempass.$EXT/ACTTOOL=test_mempass/' transform/testing/mem/test/run.sh
+sed -i 's/ACTTOOL=..\/test_mempass.$EXT/ACTTOOL=test_mempass/' transform/testing/mem/test/run_vg.sh
+sed -i 's/ACTTOOL=..\/test_mempass.$EXT/ACTTOOL=test_mempass/' transform/testing/mem/test/validate.sh
+
+sed -i 's/ACTTOOL=..\/test_arbpass.$EXT/ACTTOOL=test_arbpass/' transform/testing/arb/test/run.sh
+sed -i 's/ACTTOOL=..\/test_arbpass.$EXT/ACTTOOL=test_arbpass/' transform/testing/arb/test/run_vg.sh
+sed -i 's/ACTTOOL=..\/test_arbpass.$EXT/ACTTOOL=test_arbpass/' transform/testing/arb/test/validate.sh
 
 sed -i 's/ACTTOOL=..\/test_statepass.$EXT/ACTTOOL=test_statepass/' transform/testing/state/test/run.sh
 sed -i 's/ACTTOOL=..\/test_statepass.$EXT/ACTTOOL=test_statepass/' transform/testing/state/test/run_vg.sh
@@ -80,5 +95,9 @@ sed -i 's/ACTTOOL=..\/act2v.$EXT/ACTTOOL=act2v/' transform/act2v/test/run.sh
 sed -i 's/ACTTOOL=..\/act2v.$EXT/ACTTOOL=act2v/' transform/act2v/test/run_vg.sh
 sed -i 's/ACTTOOL=..\/act2v.$EXT/ACTTOOL=act2v/' transform/act2v/test/validate.sh
 
+#this ib addon is not installed
+cp $VLSI_TOOLS_SRC/act/test/dl/ext.lib $ACT_HOME/lib/
+
+echo "running tests "
 make runtest || exit 1
 

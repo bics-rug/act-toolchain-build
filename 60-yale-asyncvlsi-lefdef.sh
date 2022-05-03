@@ -9,6 +9,6 @@ if [ -z $FORCE_GIT_RESET ]; then
 else
    git pull
 fi
-make -j || exit 1
+make || exit 1
 make install || exit 1
 
