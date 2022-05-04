@@ -157,11 +157,10 @@ jobs:
               source ci_test_environment.sh
               for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-             
               
    test-rhel8:
      docker:
-       - image: rockylinux/rockylinux:latest
+       - image: rockylinux/rockylinux:8
      resource_class: small
      steps:
        - checkout
@@ -172,7 +171,29 @@ jobs:
           command: |
                   yum install -y 'dnf-command(config-manager)'
                   yum config-manager --set-enabled powertools -y
-                  yum install -y make
+                  # cmp (diffutils) and make are required for running tests 
+                  yum install -y make diffutils
+       - run: 
+          name: Test act
+          command: |
+              set +e
+              tar -xf async_circuit_toolkit.tar.gz
+              source ci_test_environment.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+              
+   test-opensuse15:
+     docker:
+       - image: opensuse/leap:15
+     resource_class: small
+     steps:
+       - checkout
+       - run: 
+          name: install test runner
+          command: |
+                  zypper in -y make tar gzip
+       - attach_workspace:
+          at: ./
        - run: 
           name: Test act
           command: |
@@ -225,7 +246,50 @@ jobs:
               source ci_test_environment.sh
               for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-
+              
+   test-ubuntu22:
+     docker:
+       - image: ubuntu:22.04
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - run: 
+          name: install test runner
+          command: |
+                apt-get -q update -y
+                apt-get -q install -y make
+       - run: 
+          name: Test act
+          command: |
+              set +e
+              tar -xf async_circuit_toolkit.tar.gz
+              source ci_test_environment.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+              
+   test-ubuntu16:
+     docker:
+       - image: ubuntu:16.04
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - run: 
+          name: install test runner
+          command: |
+                apt-get -q update -y
+                apt-get -q install -y make
+       - run: 
+          name: Test act
+          command: |
+              set +e
+              tar -xf async_circuit_toolkit.tar.gz
+              source ci_test_environment.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
               
    test-debian-stable:
      docker:
@@ -270,6 +334,7 @@ jobs:
               source ci_test_environment.sh
               for file in 8*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
+              
    test-debian-oldoldstable:
      docker:
        - image: debian:oldoldstable
@@ -290,7 +355,74 @@ jobs:
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
               for file in 8*; do echo $file; bash $file || exit 1; done
-              cd $WORK_DIR              
+              cd $WORK_DIR   
+              
+   test-fedora-20:
+     docker:
+       - image: fedora:20
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - run: 
+          name: install test runner
+          command: |
+                yum install -y make
+       - run: 
+          name: Test act
+          command: |
+              set +e
+              tar -xf async_circuit_toolkit.tar.gz
+              source ci_test_environment.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR 
+              
+   test-fedora-latest:
+     docker:
+       - image: fedora:latest
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - run: 
+          name: install test runner
+          command: |
+                dnf install -y make diffutils
+       - run: 
+          name: Test act
+          command: |
+              set +e
+              tar -xf async_circuit_toolkit.tar.gz
+              source ci_test_environment.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR 
+              
+   test-archlinux:
+     docker:
+       - image: archlinux/archlinux:latest
+     resource_class: small
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - run: 
+          name: install test runner
+          command: |
+              pacman-key --init
+              pacman --noconfirm -Syy
+              # cmp (diffutils) and make are required for running tests
+              pacman --noconfirm -S make diffutils
+       - run: 
+          name: Test act
+          command: |
+              set +e
+              tar -xf async_circuit_toolkit.tar.gz
+              source ci_test_environment.sh
+              for file in 8*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR  
+                       
    test-alpine:
      docker:
        - image: alpine:latest
@@ -321,10 +453,9 @@ workflows:
         -  test-centos7:
              requires:
                - build-centos7
-        # test runner not working
-        #-  test-rhel8:
-        #     requires:
-        #       - build-centos7
+        -  test-rhel8:
+             requires:
+               - build-centos7
         -  test-debian-stable:
              requires:
                - build-centos7
@@ -334,12 +465,31 @@ workflows:
         -  test-debian-oldoldstable:
              requires:
                - build-centos7
+        -  test-ubuntu22:
+             requires:
+               - build-centos7
         -  test-ubuntu20:
              requires:
                - build-centos7   
         -  test-ubuntu18:
              requires:
-               - build-centos7   
+               - build-centos7
+        -  test-ubuntu16:
+             requires:
+               - build-centos7  
+        -  test-opensuse15:
+             requires:
+               - build-centos7 
+        -  test-archlinux:
+             requires:
+               - build-centos7 
+        -  test-fedora-20:
+             requires:
+               - build-centos7 
+        -  test-fedora-latest:
+             requires:
+               - build-centos7        
+               
         # for testing fully lib independed only libc
         #-  test-alpine:
         #     requires:
@@ -359,10 +509,9 @@ workflows:
         -  test-centos7:
              requires:
                - build-centos7
-        # test runner not working
-        #-  test-rhel8:
-        #     requires:
-        #       - build-centos7
+        -  test-rhel8:
+             requires:
+               - build-centos7
         -  test-debian-stable:
              requires:
                - build-centos7
@@ -372,19 +521,44 @@ workflows:
         -  test-debian-oldoldstable:
              requires:
                - build-centos7
+        -  test-ubuntu22:
+             requires:
+               - build-centos7
         -  test-ubuntu20:
              requires:
                - build-centos7   
         -  test-ubuntu18:
              requires:
                - build-centos7
+        -  test-ubuntu16:
+             requires:
+               - build-centos7  
+        -  test-opensuse15:
+             requires:
+               - build-centos7 
+        -  test-archlinux:
+             requires:
+               - build-centos7 
+        -  test-fedora-20:
+             requires:
+               - build-centos7 
+        -  test-fedora-latest:
+             requires:
+               - build-centos7        
         -  upload-centos7:
              requires:
                - build-centos7
                - test-centos7
+               - test-rhel8
                - test-debian-stable
                - test-debian-oldstable
                - test-debian-oldoldstable
+               - test-ubuntu22
                - test-ubuntu20
-               - test-ubuntu18    
-
+               - test-ubuntu18
+               - test-ubuntu16
+               - test-opensuse15
+               - test-archlinux
+               - test-fedora-20
+               - test-fedora-latest
+        
