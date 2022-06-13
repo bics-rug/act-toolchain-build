@@ -45,11 +45,24 @@ have a peek at the ACT online docs at https://avlsi.csl.yale.edu/act
  - async memory compiler
  - prs2fpga
  - lefdef
-
-## tools to come
-
- - xyce (with MPI and verilog AMS support)
+ - expropt (incl yosys and abc)
  - pwroute
  - triton route
  - sproute
  - phyDB
+ - rect2lef
+ - actsim (without xyce)
+
+## tools to come
+
+ - xyce (with MPI)
+ - verilog AMS support for xyce
+ - magic
+ - irsim
+ - dali
+ - BiPart ?
+
+
+# licenses
+
+please find all the tool licenses in the license folder

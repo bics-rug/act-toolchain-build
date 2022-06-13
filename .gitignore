@@ -4,3 +4,4 @@ build/*
 acttest/*
 cmake/*
 *.tar.gz
+enable_ci_mode.sh

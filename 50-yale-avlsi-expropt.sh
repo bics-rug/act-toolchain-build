@@ -8,11 +8,7 @@ echo "#############################"
 echo "# expropt com"
 
 cd $EDA_SRCDIR/yale-avlsi-expropt
-if [ -z $FORCE_GIT_RESET ]; then
-   git reset --hard && git checkout master && git pull
-else
-   git pull
-fi
+
 make realclean 2> /dev/null
 make depend 
 make -j || exit 1

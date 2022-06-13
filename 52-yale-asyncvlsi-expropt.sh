@@ -1,18 +1,11 @@
 #!/bin/bash
 
-if [ -z $ACT_ASYNCVLSI_EXPROPT_URL ]; then 
-  exit 0
-fi
-
 echo "#############################"
 echo "# expropt"
 
 cd $EDA_SRCDIR/yale-asyncvlsi-expropt
-if [ -z $FORCE_GIT_RESET ]; then
-   git reset --hard && git checkout main && git pull
-else
-   git pull
-fi
+# license
+cp LICENSE $ACT_HOME/license/LICENSE_yale-asyncvlsi-expropt
 ./configure || exit 1
 make realclean 2> /dev/null
 make depend 

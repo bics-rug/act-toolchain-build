@@ -18,7 +18,7 @@ jobs:
                yum install -y centos-release-scl git wget
                yum-config-manager --enable rhel-server-rhscl-7-rpms
                echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool | cat" | bash
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 | cat" | bash
                echo "install done"
                source ci_build_environment_centos7.sh
                echo "environment done"
@@ -66,7 +66,7 @@ jobs:
               source ci_build_environment_centos7.sh
               for file in 3*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-              
+               
        - run: 
           name: Install act and libs
           command: |
@@ -118,6 +118,7 @@ jobs:
           paths:
             - src/yale-asyncvlsi-act
             - src/yale-asyncvlsi-chp2prs
+            - src/yale-asyncvlsi-actsim
             - async_circuit_toolkit_sources.tar.gz
             - async_circuit_toolkit.tar.gz      
 # package and upload
@@ -164,15 +165,15 @@ jobs:
      resource_class: small
      steps:
        - checkout
-       - attach_workspace:
-          at: ./
        - run: 
           name: install test runner
           command: |
                   yum install -y 'dnf-command(config-manager)'
                   yum config-manager --set-enabled powertools -y
                   # cmp (diffutils) and make are required for running tests 
-                  yum install -y make diffutils
+                  yum install -y make diffutils gzip tar
+       - attach_workspace:
+          at: ./
        - run: 
           name: Test act
           command: |

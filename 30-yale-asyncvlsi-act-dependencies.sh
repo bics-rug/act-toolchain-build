@@ -10,6 +10,7 @@ cd $EDA_SRCDIR/zlib
 ./configure --prefix $ACT_HOME || exit 1
 make -j || exit 1
 make install || exit 1
+cp README $ACT_HOME/license/LICENSE_zlib.txt
 
 echo "#############################"
 echo "# ncurses"
@@ -22,6 +23,7 @@ cd $EDA_SRCDIR/ncurses
 ./configure --with-shared --without-debug --prefix $ACT_HOME || exit 1
 make -j || exit 1
 make install || exit 1
+cp COPYING $ACT_HOME/license/LICENSE_ncurses.txt
 
 echo "#############################"
 echo "# libedit"
@@ -30,3 +32,4 @@ autoreconf --force --include=$ACT_HOME/include
 ./configure --prefix $ACT_HOME LIBS="-L$ACT_HOME/lib ${LIBS}" CPPFLAGS="-I$ACT_HOME/include -I$ACT_HOME/include/ncurses ${CPPFLAGS}" LDFLAGS="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib" || exit 1
 make -j || exit 1
 make install || exit 1
+cp COPYING $ACT_HOME/license/LICENSE_libedit.txt

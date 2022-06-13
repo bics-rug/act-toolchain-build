@@ -37,17 +37,17 @@ if [ ! -d "$EDA_SRCDIR/mit-fftw-fftw" ]; then
   rm fftw-3.3.10.tar.gz
 fi
 
-echo "#############################"
-echo "#openmpi"
-if [ ! -d "$EDA_SRCDIR/openmpi" ]; then
-  cd $EDA_SRCDIR
-  echo "download & check"
-  wget --quiet https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.3.tar.gz
-  echo "9c0fd1f78fc90ca9b69ae4ab704687d5544220005ccd7678bf58cc13135e67e0 openmpi-4.1.3.tar.gz" | sha256sum --check || exit 1
-  mkdir $EDA_SRCDIR/openmpi
-  tar -C "$EDA_SRCDIR/openmpi" --strip-components=1 -xf openmpi-4.1.3.tar.gz
-  rm openmpi-4.1.3.tar.gz
-fi
+#echo "#############################"
+#echo "#openmpi"
+#if [ ! -d "$EDA_SRCDIR/openmpi" ]; then
+#  cd $EDA_SRCDIR
+#  echo "download & check"
+#  wget --quiet https://download.open-mpi.org/release/open-mpi/v4.1/openmpi-4.1.3.tar.gz
+#  echo "9c0fd1f78fc90ca9b69ae4ab704687d5544220005ccd7678bf58cc13135e67e0 openmpi-4.1.3.tar.gz" | sha256sum --check || exit 1
+#  mkdir $EDA_SRCDIR/openmpi
+#  tar -C "$EDA_SRCDIR/openmpi" --strip-components=1 -xf openmpi-4.1.3.tar.gz
+#  rm openmpi-4.1.3.tar.gz
+#fi
 
 echo "#############################"
 echo "#trilinos"

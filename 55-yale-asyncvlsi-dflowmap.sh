@@ -4,11 +4,9 @@ echo "#############################"
 echo "# dflowmap"
 
 cd $EDA_SRCDIR/yale-asyncvlsi-dflowmap
-if [ -z $FORCE_GIT_RESET ]; then
-   git reset --hard && git checkout main && git pull
-else
-   git pull
-fi
+# license
+cp LICENSE $ACT_HOME/license/LICENSE_yale-asyncvlsi-dflowma
+
 ./configure 
 if [ ! -d build ]; then
 	mkdir build

@@ -1,0 +1,1 @@
+please find the liceses of the programs distributed in this package in the folder license/LICENSE_<packagename>

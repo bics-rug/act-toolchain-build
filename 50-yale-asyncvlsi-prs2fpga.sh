@@ -4,13 +4,11 @@ echo "#############################"
 echo "# prs2fpga"
 
 cd $EDA_SRCDIR/yale-asyncvlsi-prs2fpga
-if [ -z $FORCE_GIT_RESET ]; then
-   git reset --hard && git checkout main && git pull
-else
-   git pull
-fi
+# license
+cp LICENSE $ACT_HOME/license/LICENSE_yale-asyncvlsi-prs2fpga
+
 #make realclean 2> /dev/null
 #make depend 
-make -j || exit 1
+make || exit 1
 make install || exit 1
 

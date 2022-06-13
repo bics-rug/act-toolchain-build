@@ -2,20 +2,23 @@
 
 #check the build environment
 
-
 if [ -z $EDA_SRCDIR ]; then
   echo "please load environment variables first => EDA_SRCDIR top folder for downloading all sources"
   exit 1
+elif [ -d $EDA_SRCDIR ]; then
+  mkdir -p $EDA_SRCDIR
 fi
 
 if [ -z $ACT_HOME ]; then
   echo "please load environment variables first => ACT_HOME the installation dir"
   exit 1
+elif [ -d $ACT_HOME ]; then
+  mkdir -p $ACT_HOME
 fi
 
-if [ -z $LIB_HOME ]; then
-  echo "Note LIB_HOME is not defind, please define before compiling"
-fi
+#if [ -z $LIB_HOME ]; then
+#  echo "Note LIB_HOME is not defind, please define before compiling"
+#fi
 
 if [ -z $VLSI_TOOLS_SRC ]; then
   echo "please load environment variables first => VLSI_TOOLS_SRC the act src dir"
@@ -43,6 +46,8 @@ echo "git"
 command -v git > /dev/null || exit 1
 echo "wget"
 command -v wget > /dev/null || exit 1
+echo "tar"
+command -v tar > /dev/null || exit 1
 
 mkdir -p $ACT_HOME
 mkdir -p $EDA_SRCDIR

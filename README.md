@@ -18,7 +18,6 @@ The goal of this project is to have a package ready $ACT\_HOME directory that yo
 The second goal is to have an easy build script collection for self compilation with of all the dependencies, apart from the build tools.
 
 ## current state:
-- Only the front end QDI tools are included as of now, rest is WIP and will come.
 - Out of the box the project will build only the part of the tool chain that is open source.
 - To include not yet open sourced and work in progress components, specify the closed git-urls as environment variables with your login. The specific variables you can find in the scripts.
 
