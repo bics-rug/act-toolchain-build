@@ -20,10 +20,12 @@ echo "#############################"
 echo "# Boost"
 cd $EDA_SRCDIR/org-boostorg-boost
 cp LICENSE_1_0.txt $ACT_HOME/license/LICENSE_org-boostorg-boost
-
-echo "using mpi ;" >> user-config.jam
-./bootstrap.sh --prefix=$ACT_HOME --without-libraries=python || exit 1
-echo "using mpi ;" >> project-config.jam
+if [ -z $CI ]; then
+  echo "no CI => building"
+  echo "using mpi ;" >> user-config.jam
+  ./bootstrap.sh --prefix=$ACT_HOME --without-libraries=python || exit 1
+  echo "using mpi ;" >> project-config.jam
+fi
 ./b2 install || exit 1
 
 echo "#############################"

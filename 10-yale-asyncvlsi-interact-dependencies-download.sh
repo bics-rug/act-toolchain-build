@@ -8,14 +8,21 @@ echo "# boost"
 
 if [ ! -d "$EDA_SRCDIR/org-boostorg-boost" ]; then
 cd $EDA_SRCDIR
-#  git clone --depth 1 --recursive --branch master https://github.com/boostorg/boost.git
-#  mv boost org-boostorg-boost
-  echo "download & check"
-  wget --quiet https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
-  echo "273f1be93238a068aba4f9735a4a2b003019af067b9c183ed227780b8f36062c boost_1_79_0.tar.gz" | sha256sum --check || exit 1
-  mkdir $EDA_SRCDIR/org-boostorg-boost
-  tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=1 -xf boost_1_79_0.tar.gz
-  rm boost_1_79_0.tar.gz
+  if [ ! -z $CI ]; then
+    echo "download & check prebuild"
+    curl --user $UPLOAD_USER:$UPLOAD_PW https://unishare.nl/remote.php/dav/files/7956A1BC-A272-42F4-AA95-BCA1567972A2/Shared/autobuild_ACT/boost_1_79_0-prebuild.tar.gz --output boost_1_79_0.tar.gz
+    echo "2839c7fc868c032c5a73e5c63aebc605f35b4f2e0dac15b865ff5bede2f2ad6e boost_1_79_0.tar.gz" | sha256sum --check || exit 1
+    mkdir $EDA_SRCDIR/org-boostorg-boost
+    tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=2 -xf boost_1_79_0.tar.gz
+    rm boost_1_79_0.tar.gz
+  else
+    echo "download & check"
+    wget --quiet https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
+    echo "273f1be93238a068aba4f9735a4a2b003019af067b9c183ed227780b8f36062c boost_1_79_0.tar.gz" | sha256sum --check || exit 1
+    mkdir $EDA_SRCDIR/org-boostorg-boost
+    tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=1 -xf boost_1_79_0.tar.gz
+    rm boost_1_79_0.tar.gz
+  fi
 fi
 
 echo "#############################"
