@@ -10,9 +10,16 @@ cp COPYRIGHT $ACT_HOME/license/LICENSE_org-pmodels-mpich
 if [ -z $CI ]; then
   echo "no CI => building, this will take a long time"
 
-#./autogen.sh
-./configure --prefix=$ACT_HOME --enable-fast=O3 FFLAGS=-fallow-argument-mismatch FCFLAGS=-fallow-argument-mismatch
-make -j2 || exit 1
+  #./autogen.sh
+  ./configure --prefix=$ACT_HOME --enable-fast=O3 FFLAGS=-fallow-argument-mismatch FCFLAGS=-fallow-argument-mismatch
+  make -j2 || exit 1
+else
+  cd $EDA_SRCDIR
+  if [ -d $EDA_SRCDIR/org-pmodels-mpich-prebuild ]; then
+    rm -rf $EDA_SRCDIR/org-pmodels-mpich
+    mv $EDA_SRCDIR/org-pmodels-mpich-prebuild $EDA_SRCDIR/org-pmodels-mpich
+  fi
+  cd $EDA_SRCDIR/org-pmodels-mpich
 fi
 make install || exit 1
 
@@ -21,10 +28,18 @@ echo "# Boost"
 cd $EDA_SRCDIR/org-boostorg-boost
 cp LICENSE_1_0.txt $ACT_HOME/license/LICENSE_org-boostorg-boost
 if [ -z $CI ]; then
+  
   echo "no CI => building"
   echo "using mpi ;" >> user-config.jam
   ./bootstrap.sh --prefix=$ACT_HOME --without-libraries=python || exit 1
   echo "using mpi ;" >> project-config.jam
+else
+  cd $EDA_SRCDIR
+  if [ -d $EDA_SRCDIR/org-boostorg-boost-prebuild ];then
+    rm -rf $EDA_SRCDIR/org-boostorg-boost
+    mv $EDA_SRCDIR/org-boostorg-boost-prebuild $EDA_SRCDIR/org-boostorg-boost
+  fi
+  cd $EDA_SRCDIR/org-boostorg-boost
 fi
 ./b2 install || exit 1
 
@@ -37,6 +52,7 @@ make -j || exit 1
 make install || exit 1
 cp LICENSE.GPL2 $ACT_HOME/license/LICENSE_org-numactl-numactl
 cat LICENSE.LGPL2.1 >> $ACT_HOME/license/LICENSE_org-numactl-numactl
+
 echo "#############################"
 echo "# fmt"
 cd $EDA_SRCDIR/org-fmtlib-fmt
@@ -69,7 +85,9 @@ cp llvm/LICENSE.TXT $ACT_HOME/license/LICENSE_org-llvm-llvm-project
   cmake \
   -D LLVM_ENABLE_RTTI=ON \
   -D CMAKE_INSTALL_PREFIX=$ACT_HOME \
+  -D CMAKE_INCLUDE_PATH=$ACT_HOME/include \
   -D CMAKE_LIBRARY_PATH=$ACT_HOME/lib \
+  -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
   -D LLVM_INCLUDE_BENCHMARKS=OFF \
   -D CMAKE_BUILD_TYPE=Release \
   -D LLVM_BUILD_LLVM_DYLIB=ON \
@@ -81,9 +99,9 @@ cp llvm/LICENSE.TXT $ACT_HOME/license/LICENSE_org-llvm-llvm-project
   -D LLVM_INCLUDE_TOOLS=OFF \
   -G "Unix Makefiles" \
   ../llvm
-  make -j4
+  make -j4 || exit 1
 cd $EDA_SRCDIR/org-llvm-llvm-project/build
-make install
+make install || exit 1
 
 echo "#############################"
 echo "# fftw"
@@ -93,7 +111,7 @@ cd $EDA_SRCDIR/mit-fftw-fftw
 cp COPYRIGHT $ACT_HOME/license/LICENSE_mit-fftw-fftw
 cat COPYING >> $ACT_HOME/license/LICENSE_mit-fftw-fftw
 
-./configure --prefix=$ACT_HOME  || exit 1
+./configure --prefix=$ACT_HOME  CFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" CPPFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" LDFLAGS="-L${ACT_HOME}/lib -Wl,-rpath=\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib" || exit 1
 make -j  || exit 1
 make install  || exit 1
 
@@ -118,6 +136,7 @@ cmake \
 -D CMAKE_LIBRARY_PATH=$ACT_HOME/lib \
 -D CMAKE_INCLUDE_PATH=$ACT_HOME/include \
 -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
+-D CMAKE_POSITION_INDEPENDENT_CODE=ON \
 -D CMAKE_BUILD_TYPE=Release \
 ..
 make -j4
@@ -144,6 +163,7 @@ cmake \
 -D CMAKE_LIBRARY_PATH=$ACT_HOME/lib \
 -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
 -D CMAKE_BUILD_TYPE=Release \
+-D CMAKE_POSITION_INDEPENDENT_CODE=ON \
 -D CMAKE_INSTALL_LIBDIR=$ACT_HOME/lib \
 .. || exit 1
 make || exit 1

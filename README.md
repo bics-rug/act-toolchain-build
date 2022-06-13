@@ -1,7 +1,13 @@
-# Builder for ACT tool chain (https://github.com/asyncvlsi), that builds a drop in binary package with out filesystem path dependence and without library dependencies (almost no)
+# Builder for ACT tool chain (https://github.com/asyncvlsi)
+
+that builds a drop in binary package with out filesystem path dependence and without library dependencies (almost no)
 
 [![CircleCI](https://circleci.com/gh/bics-rug/act-toolchain-build/tree/main.svg?style=svg)](https://circleci.com/gh/bics-rug/act-toolchain-build/tree/main)
 
+# Download nightly builds:
+https://unishare.nl/index.php/s/Fnsgyy6CaEe2Zgi
+
+# build scripts
 when build on centos 7.2 as in the CI, it works out of the box on (verified by CI):
  - CentOS/RHEL/Oracle Linux 7.2+
  - RHEL/RockyLinux/AlmaLinux/Orecle Linux 8

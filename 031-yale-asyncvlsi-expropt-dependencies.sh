@@ -20,14 +20,6 @@ make install || exit 1
 if [ ! -f $ACT_HOME/bin/tclsh ]; then
   ln -s $ACT_HOME/bin/tclsh* $ACT_HOME/bin/tclsh
 fi
-#echo "#############################"
-#echo "# tk"
-#cd $EDA_SRCDIR/org-tcltk-tk
-#cp license.terms $ACT_HOME/license/LICENSE_org-tcltk-tk
-#cd unix
-#./configure --prefix=$ACT_HOME cd --with-tcl=$EDA_SRCDIR/org-tcltk-tcl/unix
-#make -j || exit 1
-#make install || exit 1
 
 echo "#############################"
 echo "# libffi"

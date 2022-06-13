@@ -1,7 +1,7 @@
 version: 2.2
 
 jobs:
-   build-dep-centos7:
+   build-dep1-centos7:
      docker:
      # use an old image for compatibity of binaries
        - image: centos:7.2.1511
@@ -18,7 +18,7 @@ jobs:
                yum install -y centos-release-scl git wget
                yum-config-manager --enable rhel-server-rhscl-7-rpms
                echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 | cat" | bash
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
                echo "install done"
                source ci_build_environment_centos7.sh
                echo "environment done"
@@ -31,14 +31,14 @@ jobs:
               source ci_build_environment_centos7.sh
               mkdir $ACT_HOME
               mkdir $EDA_SRCDIR
-              for file in 0*; do echo $file; bash $file || exit 1; done
+              for file in 00*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - run: 
           name: download sources
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 1*; do echo $file; bash $file || exit 1; done
+              for file in 01*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - save_cache:
           key: v3-dependencies
@@ -59,16 +59,113 @@ jobs:
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 2*; do echo $file; bash $file || exit 1; done
+              for file in 02*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR       
 
        - run: 
-          name: Install dependencies
+          name: Install dependencies act + act FE
           command: |
               echo $ACT_HOME
               set +e
               source ci_build_environment_centos7.sh
-              for file in 3*; do echo $file; bash $file || exit 1; done
+              for file in 03*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+
+       - persist_to_workspace:
+          root: ./
+          paths:
+            - act
+            - src
+            - async_circuit_toolkit_sources.tar.gz
+   build-dep2-centos7:
+     docker:
+     # use an old image for compatibity of binaries
+       - image: centos:7.2.1511
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - restore_cache:
+          keys: 
+               - v3-dependencies-light
+       - run:
+          name: check build tools
+          command: |
+               set +e
+               date
+               yum install -y centos-release-scl git wget
+               yum-config-manager --enable rhel-server-rhscl-7-rpms
+               echo "repo setup"
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
+               echo "install done"
+               source ci_build_environment_centos7.sh
+               echo "environment done"
+               bash check_build_environment.sh || exit 1
+               cd $WORK_DIR
+       - run: 
+          name: build cmake
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              mkdir $ACT_HOME
+              mkdir $EDA_SRCDIR
+              for file in 00*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+       - run: 
+          name: Install dependencies BE
+          command: |
+              echo $ACT_HOME
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 04*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+       - persist_to_workspace:
+          root: ./
+          paths:
+            - act
+            - src
+            - async_circuit_toolkit_sources.tar.gz
+   build-dep3-centos7:
+     docker:
+     # use an old image for compatibity of binaries
+       - image: centos:7.2.1511
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - restore_cache:
+          keys: 
+               - v3-dependencies-light
+       - run:
+          name: check build tools
+          command: |
+               set +e
+               date
+               yum install -y centos-release-scl git wget
+               yum-config-manager --enable rhel-server-rhscl-7-rpms
+               echo "repo setup"
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
+               echo "install done"
+               source ci_build_environment_centos7.sh
+               echo "environment done"
+               bash check_build_environment.sh || exit 1
+               cd $WORK_DIR
+       - run: 
+          name: build cmake
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              mkdir $ACT_HOME
+              mkdir $EDA_SRCDIR
+              for file in 00*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR
+       - run: 
+          name: Install dependencies sim
+          command: |
+              echo $ACT_HOME
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 05*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - persist_to_workspace:
           root: ./
@@ -95,7 +192,7 @@ jobs:
                yum install -y centos-release-scl git wget
                yum-config-manager --enable rhel-server-rhscl-7-rpms
                echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 | cat" | bash
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
                echo "install done"
                source ci_build_environment_centos7.sh
                echo "environment done"
@@ -108,43 +205,59 @@ jobs:
               source ci_build_environment_centos7.sh
               mkdir $ACT_HOME
               mkdir $EDA_SRCDIR
-              for file in 0*; do echo $file; bash $file || exit 1; done
+              for file in 00*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR     
        - run: 
-          name: Install act and libs
+          name: Install act + libs
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 4*; do echo $file; bash $file || exit 1; done
+              for file in 06*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-    
        - run: 
           name: Install act addons FE / syntesis
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 5*; do echo $file; bash $file || exit 1; done
+              for file in 07*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - run: 
           name: Install act addons BE / physical design
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 6*; do echo $file; bash $file || exit 1; done
+              for file in 08*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR  
        - run: 
           name: Install interact
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 7*; do echo $file; bash $file || exit 1; done
+              for file in 09*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR   
+       - run: 
+          name: Install gui tools
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              # graphic libraries are not shipped in the package
+              export BUILD_GUI="true"
+              echo "yum install -y libX11-devel mesa-libGL-devel mesa-libGLU-devel | cat" | bash
+              for file in 10*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR 
+       - run: 
+          name: Install docs and package
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              for file in 11*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR     
        - run: 
           name: Test act
           command: |
               set +e
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - run:
           name: Clean for persist
@@ -178,7 +291,7 @@ jobs:
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              for file in 9*; do echo $file; bash $file || exit 1; done
+              for file in 13*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR   
 
    test-centos7:
@@ -199,7 +312,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-rhel8:
@@ -223,7 +336,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-opensuse15:
@@ -244,7 +357,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu18:
@@ -266,7 +379,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu20:
@@ -288,7 +401,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu22:
@@ -310,7 +423,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-ubuntu16:
@@ -332,7 +445,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-debian-stable:
@@ -354,7 +467,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
    test-debian-oldstable:
@@ -376,7 +489,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
               
    test-debian-oldoldstable:
@@ -398,7 +511,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR   
               
    test-fedora-20:
@@ -419,7 +532,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR 
               
    test-fedora-latest:
@@ -440,7 +553,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR 
               
    test-archlinux:
@@ -464,7 +577,7 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR  
                        
    test-alpine:
@@ -486,17 +599,23 @@ jobs:
               set +e
               tar -xf async_circuit_toolkit.tar.gz
               source ci_test_environment.sh
-              for file in 8*; do echo $file; bash $file || exit 1; done
+              for file in 12*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
 
 workflows:
    version: 2
    build:
      jobs: 
-        -  build-dep-centos7
+        -  build-dep1-centos7
+        -  build-dep2-centos7:
+             requires:
+               - build-dep1-centos7
+        -  build-dep3-centos7:
+             requires:
+               - build-dep2-centos7
         -  build-centos7:
              requires:
-               - build-dep-centos7
+               - build-dep3-centos7
         -  test-centos7:
              requires:
                - build-centos7
@@ -546,16 +665,22 @@ workflows:
     triggers:
      - schedule:
          # Every day, 0421Z.
-         cron: "30 8 * * *"
+         cron: "30 5 * * *"
          filters:
            branches:
              only:
                - main
     jobs:     
-        -  build-dep-centos7
+        -  build-dep1-centos7
+        -  build-dep2-centos7:
+             requires:
+               - build-dep1-centos7
+        -  build-dep3-centos7:
+             requires:
+               - build-dep2-centos7
         -  build-centos7:
              requires:
-               - build-dep-centos7
+               - build-dep3-centos7
         -  test-centos7:
              requires:
                - build-centos7

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Dali build is broken with gcc11, allow to fail
+
 echo "#############################"
 echo "# dali"
 
@@ -17,7 +19,7 @@ cmake \
 -D CMAKE_INCLUDE_PATH=$ACT_HOME/include \
 -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
 -D CMAKE_BUILD_TYPE=Release \
-.. || exit 1
-make 2> install.log || exit 1
-make install || exit 1
+.. #|| exit 1
+make # 2> install.log #|| exit 1
+make install #|| exit 1
 

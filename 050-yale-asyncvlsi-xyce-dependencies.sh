@@ -30,6 +30,7 @@ cmake \
  -D SuiteSparsePath=$EDA_SRCDIR/tamu-drtimothyaldendavis-suitesparse \
  -D CMAKE_INSTALL_PREFIX=$ACT_HOME \
  -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
+ -D CMAKE_POSITION_INDEPENDENT_CODE=ON \
  $EDA_SRCDIR/yale-asyncvlsi-xyce/cmake/trilinos/AMD || exit 1
 cmake --build . -t install || exit 1
 cp ../LICENSE $ACT_HOME/license/LICENSE_
@@ -59,15 +60,20 @@ cmake \
 -D BLAS_LIBRARY_DIRS=$ACT_HOME/lib \
 -D LAPACK_LIBRARY_DIRS=$ACT_HOME/lib \
 -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
+-D CMAKE_POSITION_INDEPENDENT_CODE=ON \
 $EDA_SRCDIR/sandia-trilinos-trilinos || exit 1
 
-cmake --build . -j -t install  || exit 1
+cmake --build . -j2 -t install  || exit 1
 
-
-# @TODO
+#echo "#############################"
+#echo "# adms"
+#
 #cd $EDA_SRCDIR/org-qucs-adms
 #cp LICENSE $ACT_HOME/license/LICENSE_org-qucs-adms
 #sh bootstrap.sh || exit 1
-#./configure --prefix=$ACT_HOME LIBS="-L$ACT_HOME/lib ${LIBS}" CPPFLAGS="-I$ACT_HOME/include ${CPPFLAGS}" LDFLAGS="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib"  || exit 1
+#./configure --prefix=$ACT_HOME \
+#   LIBS="-L$ACT_HOME/lib ${LIBS}" \
+#   CPPFLAGS="-I$ACT_HOME/include ${CPPFLAGS}" \
+#   LDFLAGS="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib"  || exit 1
 #make -j  || exit 1
 #make install  || exit 1

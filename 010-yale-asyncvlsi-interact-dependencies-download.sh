@@ -12,17 +12,16 @@ cd $EDA_SRCDIR
     echo "download & check prebuild"
     wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/boost_1_79_0-prebuild.tar.gz
     echo "2839c7fc868c032c5a73e5c63aebc605f35b4f2e0dac15b865ff5bede2f2ad6e boost_1_79_0-prebuild.tar.gz" | sha256sum --check || exit 1
-    mkdir $EDA_SRCDIR/org-boostorg-boost
-    tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=2 -xf boost_1_79_0-prebuild.tar.gz
+    mkdir $EDA_SRCDIR/org-boostorg-boost-prebuild
+    tar -C "$EDA_SRCDIR/org-boostorg-boost-prebuild" --strip-components=2 -xf boost_1_79_0-prebuild.tar.gz
     rm boost_1_79_0-prebuild.tar.gz
-  else
+  fi
     echo "download & check"
     wget --quiet https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
     echo "273f1be93238a068aba4f9735a4a2b003019af067b9c183ed227780b8f36062c boost_1_79_0.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-boostorg-boost
     tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=1 -xf boost_1_79_0.tar.gz
     rm boost_1_79_0.tar.gz
-  fi
 fi
 
 echo "#############################"
@@ -69,19 +68,18 @@ if [ ! -d "$EDA_SRCDIR/org-pmodels-mpich" ]; then
     #mv mpich org-pmodels-mpich
     if [ ! -z $CI ]; then
     echo "download & check prebuild"
-wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/mpich-4.0.2-prebuild.tar.gz
+    wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/mpich-4.0.2-prebuild.tar.gz
     echo "509c5d0a6f3cc920d559e5622b621a7a8223f7422477dc912a13e9cae8717814 mpich-4.0.2-prebuild.tar.gz" | sha256sum --check || exit 1
-    mkdir $EDA_SRCDIR/org-pmodels-mpich
-    tar -C "$EDA_SRCDIR/org-pmodels-mpich" --strip-components=1 -xf mpich-4.0.2-prebuild.tar.gz
+    mkdir $EDA_SRCDIR/org-pmodels-mpich-prebuild
+    tar -C "$EDA_SRCDIR/org-pmodels-mpich-prebuild" --strip-components=1 -xf mpich-4.0.2-prebuild.tar.gz
     rm mpich-4.0.2-prebuild.tar.gz
-  else
+  fi
     echo "download & check"
     wget --quiet https://www.mpich.org/static/downloads/4.0.2/mpich-4.0.2.tar.gz
     echo "5a42f1a889d4a2d996c26e48cbf9c595cbf4316c6814f7c181e3320d21dedd42 mpich-4.0.2.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-pmodels-mpich
     tar -C "$EDA_SRCDIR/org-pmodels-mpich" --strip-components=1 -xf mpich-4.0.2.tar.gz
     rm mpich-4.0.2.tar.gz
-  fi
 fi
 
 echo "#############################"
