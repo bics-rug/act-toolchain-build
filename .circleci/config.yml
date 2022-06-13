@@ -1,7 +1,7 @@
 version: 2.2
 
 jobs:
-   build-centos7:
+   build-dep-centos7:
      docker:
      # use an old image for compatibity of binaries
        - image: centos:7.2.1511
@@ -48,7 +48,11 @@ jobs:
               - src/ncurses
               - src/zlib
               - src/mit-fftw-fftw
-              - src/openmpi
+              - cmake
+       - save_cache:
+          key: v3-dependencies-light
+          paths:
+              - /var/cache/yum
               - cmake
        - run: 
           name: package sources
@@ -66,7 +70,46 @@ jobs:
               source ci_build_environment_centos7.sh
               for file in 3*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
-               
+       - persist_to_workspace:
+          root: ./
+          paths:
+            - act
+            - src
+jobs:
+   build-centos7:
+     docker:
+     # use an old image for compatibity of binaries
+       - image: centos:7.2.1511
+     steps:
+       - checkout
+       - attach_workspace:
+          at: ./
+       - restore_cache:
+          keys: 
+               - v3-dependencies-light
+       - run:
+          name: check build tools
+          command: |
+               set +e
+               date
+               yum install -y centos-release-scl git wget
+               yum-config-manager --enable rhel-server-rhscl-7-rpms
+               echo "repo setup"
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 | cat" | bash
+               echo "install done"
+               source ci_build_environment_centos7.sh
+               echo "environment done"
+               bash check_build_environment.sh || exit 1
+               cd $WORK_DIR
+       - run: 
+          name: build cmake
+          command: |
+              set +e
+              source ci_build_environment_centos7.sh
+              mkdir $ACT_HOME
+              mkdir $EDA_SRCDIR
+              for file in 0*; do echo $file; bash $file || exit 1; done
+              cd $WORK_DIR     
        - run: 
           name: Install act and libs
           command: |
@@ -450,7 +493,10 @@ workflows:
    version: 2
    build:
      jobs: 
-        -  build-centos7
+        -  build-deps-centos7
+        -  build-centos7:
+             requires:
+               - build-deps-centos7
         -  test-centos7:
              requires:
                - build-centos7
