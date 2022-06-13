@@ -10,11 +10,11 @@ if [ ! -d "$EDA_SRCDIR/org-boostorg-boost" ]; then
 cd $EDA_SRCDIR
   if [ ! -z $CI ]; then
     echo "download & check prebuild"
-    curl --user $UPLOAD_USER:$UPLOAD_PW https://unishare.nl/remote.php/dav/files/7956A1BC-A272-42F4-AA95-BCA1567972A2/Shared/autobuild_ACT/boost_1_79_0-prebuild.tar.gz --output boost_1_79_0.tar.gz
-    echo "2839c7fc868c032c5a73e5c63aebc605f35b4f2e0dac15b865ff5bede2f2ad6e boost_1_79_0.tar.gz" | sha256sum --check || exit 1
+    wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/boost_1_79_0-prebuild.tar.gz
+    echo "2839c7fc868c032c5a73e5c63aebc605f35b4f2e0dac15b865ff5bede2f2ad6e boost_1_79_0-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-boostorg-boost
-    tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=2 -xf boost_1_79_0.tar.gz
-    rm boost_1_79_0.tar.gz
+    tar -C "$EDA_SRCDIR/org-boostorg-boost" --strip-components=2 -xf boost_1_79_0-prebuild.tar.gz
+    rm boost_1_79_0-prebuild.tar.gz
   else
     echo "download & check"
     wget --quiet https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost_1_79_0.tar.gz
@@ -48,11 +48,11 @@ echo "# llvm"
 if [ ! -d "$EDA_SRCDIR/org-llvm-llvm-project" ]; then
   if [ ! -z $CI ]; then
     echo "download & check prebuild"
-    curl --user $UPLOAD_USER:$UPLOAD_PW https://unishare.nl/remote.php/dav/files/7956A1BC-A272-42F4-AA95-BCA1567972A2/Shared/autobuild_ACT/llvm-14.x-prebuild.tar.gz --output llvm-14.x.tar.gz
-    echo "4f55b02bf169897c3c07d0397c77bad6f9802a465ff4006179a64450afd0d2c0 llvm-14.x.tar.gz" | sha256sum --check || exit 1
+wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/llvm-14.x-prebuild.tar.gz
+    echo "4f55b02bf169897c3c07d0397c77bad6f9802a465ff4006179a64450afd0d2c0 llvm-14.x-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-llvm-llvm-project
-    tar -C "$EDA_SRCDIR/org-llvm-llvm-project" --strip-components=1 -xf llvm-14.x.tar.gz
-    rm llvm-14.x.tar.gz
+    tar -C "$EDA_SRCDIR/org-llvm-llvm-project" --strip-components=1 -xf llvm-14.x-prebuild.tar.gz
+    rm llvm-14.x-prebuild.tar.gz
   else
     cd $EDA_SRCDIR
     git clone --depth 1 --branch release/14.x https://github.com/llvm/llvm-project.git
@@ -69,11 +69,11 @@ if [ ! -d "$EDA_SRCDIR/org-pmodels-mpich" ]; then
     #mv mpich org-pmodels-mpich
     if [ ! -z $CI ]; then
     echo "download & check prebuild"
-    curl --user $UPLOAD_USER:$UPLOAD_PW https://unishare.nl/remote.php/dav/files/7956A1BC-A272-42F4-AA95-BCA1567972A2/Shared/autobuild_ACT/mpich-4.0.2-prebuild.tar.gz --output mpich-4.0.2.tar.gz
-    echo "509c5d0a6f3cc920d559e5622b621a7a8223f7422477dc912a13e9cae8717814 mpich-4.0.2.tar.gz" | sha256sum --check || exit 1
+wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/mpich-4.0.2-prebuild.tar.gz
+    echo "509c5d0a6f3cc920d559e5622b621a7a8223f7422477dc912a13e9cae8717814 mpich-4.0.2-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-pmodels-mpich
-    tar -C "$EDA_SRCDIR/org-pmodels-mpich" --strip-components=1 -xf mpich-4.0.2.tar.gz
-    rm mpich-4.0.2.tar.gz
+    tar -C "$EDA_SRCDIR/org-pmodels-mpich" --strip-components=1 -xf mpich-4.0.2-prebuild.tar.gz
+    rm mpich-4.0.2-prebuild.tar.gz
   else
     echo "download & check"
     wget --quiet https://www.mpich.org/static/downloads/4.0.2/mpich-4.0.2.tar.gz

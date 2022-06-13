@@ -75,6 +75,7 @@ jobs:
           paths:
             - act
             - src
+            - async_circuit_toolkit_sources.tar.gz
    build-centos7:
      docker:
      # use an old image for compatibity of binaries

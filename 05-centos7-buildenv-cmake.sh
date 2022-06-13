@@ -5,11 +5,11 @@ echo "#build cmake"
 if [ ! -d "cmake" ]; then
   if [ ! -z $CI ]; then
     echo "prebuild download & check"
-    curl --user $UPLOAD_USER:$UPLOAD_PW https://unishare.nl/remote.php/dav/files/7956A1BC-A272-42F4-AA95-BCA1567972A2/Shared/autobuild_ACT/cmake-3.23.2-prebuild.tar.gz --output cmake-3.23.2.tar.gz
-    echo "34fe140f10bbeb5e71c7529a26c53386439bbdab14c8efbfd71d86aa36cba578 cmake-3.23.2.tar.gz" | sha256sum --check || exit 1
+    https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/cmake-3.23.2-prebuild.tar.gz
+    echo "34fe140f10bbeb5e71c7529a26c53386439bbdab14c8efbfd71d86aa36cba578 cmake-3.23.2-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir cmake
-    tar -C "cmake" --strip-components=1 -xf cmake-3.23.2.tar.gz
-    rm cmake-3.23.2.tar.gz
+    tar -C "cmake" --strip-components=1 -xf cmake-3.23.2-prebuild.tar.gz
+    rm cmake-3.23.2-prebuild.tar.gz
   else
 
     echo "download & check"
