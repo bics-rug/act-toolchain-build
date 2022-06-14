@@ -51,14 +51,15 @@ have a peek at the ACT online docs at https://avlsi.csl.yale.edu/act
  - sproute
  - phyDB
  - rect2lef
- - xyce (with MPI)
+ - xyce
  - actsim (with xyce)
  - magic (requires X11 and OpenGL)
  - irsim (requires X11 and OpenGL)
 
 ## tools to come
  
- - verilog AMS support for xyce
+ - verilog AMS support for xyce (only on demand)
+ - MPI support for xyce (only on demand)
  - dali
  - BiPart ?
 

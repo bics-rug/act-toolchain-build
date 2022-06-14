@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# this file builds
+# - MPICH -> MPI
+# - Boost
+# - Numactl
+# - fmt
+# - libLLVM
+# - FFTW
+# - Eigen
+
 echo "#############################"
 echo "# interact and route dependencies"
 echo "# MPICH"
@@ -22,6 +31,12 @@ else
   cd $EDA_SRCDIR/org-pmodels-mpich
 fi
 make install || exit 1
+
+# MPICH is active because required
+# cd $EDA_SRCDIR/openmpi
+# ./configure --prefix=$ACT_HOME --enable-static --with-wrapper-libs="-L$ACT_HOME/lib ${LIBS}" --with-wrapper-cxxflags="-I$ACT_HOME/include ${CXXFLAGS}" --with-wrapper-cflags="-I$ACT_HOME/include ${CFLAGS}" --with-wrapper-ldflags="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib" LIBS="-L$ACT_HOME/lib ${LIBS}" CPPFLAGS="-I$ACT_HOME/include ${CPPFLAGS}" LDFLAGS="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib"  || exit 1
+# make -j  || exit 1
+# make install  || exit 1
 
 echo "#############################"
 echo "# Boost"
@@ -111,18 +126,17 @@ cd $EDA_SRCDIR/mit-fftw-fftw
 cp COPYRIGHT $ACT_HOME/license/LICENSE_mit-fftw-fftw
 cat COPYING >> $ACT_HOME/license/LICENSE_mit-fftw-fftw
 
-./configure --prefix=$ACT_HOME  CFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" CPPFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" LDFLAGS="-L${ACT_HOME}/lib -Wl,-rpath=\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib" || exit 1
+./configure --prefix=$ACT_HOME \
+ CFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" \
+ CPPFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" \
+ LDFLAGS="-L${ACT_HOME}/lib -Wl,-rpath=\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib" || exit 1
 make -j  || exit 1
 make install  || exit 1
 
-# MPICH is already installed by 31 interact dependencies
-#cd $EDA_SRCDIR/openmpi
-#./configure --prefix=$ACT_HOME --enable-static --with-wrapper-libs="-L$ACT_HOME/lib ${LIBS}" --with-wrapper-cxxflags="-I$ACT_HOME/include ${CXXFLAGS}" --with-wrapper-cflags="-I$ACT_HOME/include ${CFLAGS}" --with-wrapper-ldflags="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib" LIBS="-L$ACT_HOME/lib ${LIBS}" CPPFLAGS="-I$ACT_HOME/include ${CPPFLAGS}" LDFLAGS="-L$ACT_HOME/lib ${LDFLAGS} -Wl,-rpath=\\\$\$ORIGIN/../lib,-rpath=\\\$\$ACT_HOME/lib"  || exit 1
-#make -j  || exit 1
-#make install  || exit 1
+
 
 echo "#############################"
-echo "#build eigen"
+echo "# eigen"
 
 cd $EDA_SRCDIR/org-libeigen-eigen
 cp COPYING.README $ACT_HOME/license/LICENSE_org-libeigen-eigen

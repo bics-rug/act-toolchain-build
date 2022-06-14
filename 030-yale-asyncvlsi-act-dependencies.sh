@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# compile all dependencies from scrach so we have an almost dependency independent package
-
+# this file builds
+# - zlib
+# - ncurses
+# - libedit
 
 # first get zlib 
 echo "#############################"

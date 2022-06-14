@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# this file builds
+# - readline
+# - tcl
+# - libffi
+# - ABC
+# - yosys
+
 echo "#############################"
 echo "# expropt dependencies"
 echo "# libreadline"

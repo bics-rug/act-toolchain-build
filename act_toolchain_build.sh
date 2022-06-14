@@ -16,6 +16,8 @@ fi
 if [ -z $VLSI_TOOLS_SRC ]; then 
   export VLSI_TOOLS_SRC=$EDA_SRCDIR/yale-asyncvlsi-act
 fi
+echo "#############################################################################################"
+echo "This build process takes multiple hours, sit back and relax (using no prebuilds)"
 
 echo "#############################################################################################"
 echo "do you want to buid GUI tools (X11 and openGL required) [y/N]"
@@ -27,6 +29,8 @@ else
     echo "building gui programs"
     export BUILD_GUI="true"
 fi
+
+
 
 bash check_build_environment.sh || exit 1
 
