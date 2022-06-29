@@ -6,7 +6,7 @@ echo "# actsim"
 cd $EDA_SRCDIR/yale-asyncvlsi-actsim
 # license
 cp LICENSE $ACT_HOME/license/LICENSE_yale-asyncvlsi-actsim
-./grab_xyce.sh $EDA_SRCDIR/yale-asyncvlsi-xyce/build
+./grab_xyce.sh $EDA_SRCDIR/sandia-xyce-xyce/build
 ./configure || exit 1
 make depend 
 make || exit 1

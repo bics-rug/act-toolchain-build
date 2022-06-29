@@ -10,6 +10,8 @@ cp LICENSE $ACT_HOME/license/LICENSE_yale-asyncvlsi-bipart
 if [ ! -d build ]; then
 	mkdir build
 fi
+export GALOIS_INCLUDE=$ACT_HOME/include
+export GALOIS_LIB=$ACT_HOME/lib
 cd $EDA_SRCDIR/yale-asyncvlsi-bipart/build
 cmake \
 -D CMAKE_INSTALL_PREFIX=$ACT_HOME \

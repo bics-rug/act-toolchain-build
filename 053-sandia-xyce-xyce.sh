@@ -12,43 +12,10 @@ cd $EDA_SRCDIR/sandia-xyce-xyce
 # license
 cp COPYING $ACT_HOME/license/LICENSE_sandia-xyce-xyce
 
-./bootstrap
-./configure \
- --enable-fftw \
- --enable-radmodels \
- --enable-admsmodels \
- --enable-neuronmodels \
- --enable-radmodels \
- --enable-admsmodels \
- --enable-neuronmodels \
- --enable-isorropia \
- --enable-zoltan \
- --enable-pardiso_mkl \
- --enable-hdf5 \
- --enable-stokhos \
- --enable-amd \
- --prefix=$ACT_HOME \
- --enable-shared=yes \
- CFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" \
- CXXFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib -fPIC" \
- CPPFLAGS="-I${ACT_HOME}/include -L${ACT_HOME}/lib" \
- LDFLAGS="-L${ACT_HOME}/lib -Wl,-rpath=\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib" || exit 1
-# #LIBS=" ${ACT_HOME}/lib/libkokkoscore.a ${ACT_HOME}/lib/libkokkoskernals.a ${ACT_HOME}/lib/libkokkosalgorithms.a ${ACT_HOME}/lib/libkokkoscontainers.a ${ACT_HOME}/lib/libteuchoskokkoscomm.a ${ACT_HOME}/lib/libteuchoskokkoscompat.a "
-#
-make || exit 1
-make install || exit 1
-
- #  --enable-shylu \
- #  --enable-superludist \
- #  --enable-superlu \
- #  --enable-rol \
- #  --enable-mpi \
- #  --enable-amesos2 \
-
-
 if [ ! -d build ]; then
 	mkdir build
 fi
+
 cd $EDA_SRCDIR/sandia-xyce-xyce/build
 
 cmake \
@@ -61,4 +28,15 @@ cmake \
 $EDA_SRCDIR/sandia-xyce-xyce  || exit 1
 
 ## -D Xyce_PLUGIN_SUPPORT=ON \
-cmake --build . -j 2 || exit 1	
+cmake --build . -j 2 -t install || exit 1	
+
+cd $EDA_SRCDIR/sandia-xyce-xyce/utils/XyceCInterface
+
+sed -i 's/#include <N_DEV_Algorithm.h>/ /' N_CIR_XyceCInterface.C
+g++ -I$ACT_HOME/include -I. -c N_CIR_XyceCInterface.C -fPIC || exit 1	
+
+ar ruv libxycecinterface.a N_CIR_XyceCInterface.o || exit 1	
+
+#ranlib libxycecinterface.a
+cp libxycecinterface.a $ACT_HOME/lib/
+cp N_CIR_XyceCInterface.h $ACT_HOME/include/

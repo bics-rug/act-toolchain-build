@@ -69,7 +69,7 @@ if [ ! -d "$EDA_SRCDIR/org-pmodels-mpich" ]; then
     if [ ! -z $CI ]; then
     echo "download & check prebuild"
     wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/mpich-4.0.2-prebuild.tar.gz
-    echo "509c5d0a6f3cc920d559e5622b621a7a8223f7422477dc912a13e9cae8717814 mpich-4.0.2-prebuild.tar.gz" | sha256sum --check || exit 1
+    echo "cab06bbe4bb4f94bc831cf68c7460fdfb11d5984ca686fcd877050552eaa27a6 mpich-4.0.2-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-pmodels-mpich-prebuild
     tar -C "$EDA_SRCDIR/org-pmodels-mpich-prebuild" --strip-components=1 -xf mpich-4.0.2-prebuild.tar.gz
     rm mpich-4.0.2-prebuild.tar.gz

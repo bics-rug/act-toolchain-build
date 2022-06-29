@@ -53,16 +53,19 @@ have a peek at the ACT online docs at https://avlsi.csl.yale.edu/act
  - rect2lef
  - xyce
  - actsim (with xyce)
+ - bipart
  - magic (requires X11 and OpenGL)
  - irsim (requires X11 and OpenGL)
+
+## techs included
+
+ - skywater 130
 
 ## tools to come
  
  - verilog AMS support for xyce (only on demand)
  - MPI support for xyce (only on demand)
  - dali
- - BiPart ?
-
 
 # licenses
 

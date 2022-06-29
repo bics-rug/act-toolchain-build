@@ -18,7 +18,7 @@ jobs:
                yum install -y centos-release-scl git wget
                yum-config-manager --enable rhel-server-rhscl-7-rpms
                echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
+               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh patch | cat" | bash
                echo "install done"
                source ci_build_environment_centos7.sh
                echo "environment done"
