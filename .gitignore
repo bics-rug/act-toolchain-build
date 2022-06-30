@@ -5,3 +5,5 @@ acttest/*
 cmake/*
 *.tar.gz
 enable_ci_mode.sh
+*.tar.gz.sha256
+/index.html

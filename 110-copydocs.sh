@@ -19,5 +19,3 @@ wget  --no-verbose \
       https://avlsi.csl.yale.edu/act/
 
 
-#echo "<\\!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><head><meta http-equiv=\"refresh\" content=\"0; URL=./act/index.html\" /></head></html>" > index.html
-

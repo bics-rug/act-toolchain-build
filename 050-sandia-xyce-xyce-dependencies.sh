@@ -33,7 +33,8 @@ cp LICENSE.txt $ACT_HOME/license/LICENSE_tamu-drtimothyaldendavis-suitesparse
 cmake \
  -D SuiteSparsePath=$EDA_SRCDIR/tamu-drtimothyaldendavis-suitesparse \
  -D CMAKE_INSTALL_PREFIX=$ACT_HOME \
- -D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
+ -D CMAKE_EXE_LINKER_FLAGS=-Wl,-rpath,'$ORIGIN/../lib' \
+ -D CMAKE_SHARED_LINKER_FLAGS=-Wl,-rpath,'$ORIGIN/../lib' \
  -D CMAKE_POSITION_INDEPENDENT_CODE=ON \
  $EDA_SRCDIR/sandia-xyce-xyce/cmake/trilinos/AMD || exit 1
 cmake --build . -t install || exit 1
@@ -87,7 +88,8 @@ cmake \
 -D TPL_AMD_INCLUDE_DIRS=$ACT_HOME/include \
 -D TPL_ENABLE_BLAS=ON \
 -D TPL_ENABLE_LAPACK=ON \
--D CMAKE_INSTALL_RPATH="\$ORIGIN/../lib,$ACT_HOME/lib" \
+-D CMAKE_EXE_LINKER_FLAGS=-Wl,-rpath,'$ORIGIN/../lib' \
+-D CMAKE_SHARED_LINKER_FLAGS=-Wl,-rpath,'$ORIGIN/../lib' \
 -D CMAKE_INSTALL_PREFIX=$ACT_HOME \
 $EDA_SRCDIR/sandia-trilinos-trilinos || exit 1
 
