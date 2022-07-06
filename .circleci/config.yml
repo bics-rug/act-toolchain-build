@@ -654,7 +654,7 @@ workflows:
                - build-centos7 
         -  test-fedora-latest:
              requires:
-               - build-centos7        
+               - build-centos7
                
         # for testing fully lib independed only libc
         #-  test-alpine:

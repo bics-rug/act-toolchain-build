@@ -98,13 +98,14 @@ cp llvm/LICENSE.TXT $ACT_HOME/license/LICENSE_org-llvm-llvm-project
 	mkdir build
   fi
   cd $EDA_SRCDIR/org-llvm-llvm-project/build
+  export LD_LIBRARY_PATH=$ACT_HOME/lib
   cmake \
   -D LLVM_ENABLE_RTTI=ON \
   -D CMAKE_INSTALL_PREFIX=$ACT_HOME \
   -D CMAKE_INCLUDE_PATH=$ACT_HOME/include \
   -D CMAKE_LIBRARY_PATH=$ACT_HOME/lib \
-  -D CMAKE_EXE_LINKER_FLAGS=-Wl,-rpath,'$ORIGIN/../lib' \
-  -D CMAKE_SHARED_LINKER_FLAGS=-Wl,-rpath,'$ORIGIN/../lib' \
+  -D CMAKE_EXE_LINKER_FLAGS="-Wl,-rpath,'\$ORIGIN/../lib' -L${ACT_HOME}/lib" \
+  -D CMAKE_SHARED_LINKER_FLAGS="-Wl,-rpath,'\$ORIGIN/../lib' -L${ACT_HOME}/lib" \
   -D LLVM_INCLUDE_BENCHMARKS=OFF \
   -D CMAKE_BUILD_TYPE=Release \
   -D LLVM_BUILD_LLVM_DYLIB=ON \
@@ -119,6 +120,7 @@ cp llvm/LICENSE.TXT $ACT_HOME/license/LICENSE_org-llvm-llvm-project
   make -j4 || exit 1
 cd $EDA_SRCDIR/org-llvm-llvm-project/build
 make install || exit 1
+unset LD_LIBRARY_PATH
 
 echo "#############################"
 echo "# fftw"
