@@ -16,3 +16,5 @@ cp COPYRIGHT $ACT_HOME/license/LICENSE_yale-asyncvlsi-irsim
 make || exit 1
 make install || exit 1
 
+sed -i 's/\/root\/project\/act/\${ACT_HOME}/g' $ACT_HOME/bin/irsim
+
