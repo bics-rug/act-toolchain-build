@@ -6,7 +6,7 @@ if [ ! -d "cmake" ]; then
   if [ ! -z $CI ]; then
     echo "prebuild download & check"
     wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/cmake-3.23.2-prebuild.tar.gz
-    echo "34fe140f10bbeb5e71c7529a26c53386439bbdab14c8efbfd71d86aa36cba578 cmake-3.23.2-prebuild.tar.gz" | sha256sum --check || exit 1
+    echo "b9fcd93f12c48a359026a8bec2b2bfa7bda13ce55698fcad0db8337f2320e9f7 cmake-3.23.2-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir cmake
     tar -C "cmake" --strip-components=1 -xf cmake-3.23.2-prebuild.tar.gz
     rm cmake-3.23.2-prebuild.tar.gz

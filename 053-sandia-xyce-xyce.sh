@@ -30,14 +30,3 @@ $EDA_SRCDIR/sandia-xyce-xyce  || exit 1
 
 ## -D Xyce_PLUGIN_SUPPORT=ON \
 cmake --build . -j 2 -t install || exit 1	
-
-cd $EDA_SRCDIR/sandia-xyce-xyce/utils/XyceCInterface
-
-sed -i 's/#include <N_DEV_Algorithm.h>/ /' N_CIR_XyceCInterface.C
-g++ -I$ACT_HOME/include -I. -c N_CIR_XyceCInterface.C -fPIC || exit 1	
-
-ar ruv libxycecinterface.a N_CIR_XyceCInterface.o || exit 1	
-
-#ranlib libxycecinterface.a
-cp libxycecinterface.a $ACT_HOME/lib/
-cp N_CIR_XyceCInterface.h $ACT_HOME/include/

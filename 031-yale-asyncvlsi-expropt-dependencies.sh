@@ -43,15 +43,17 @@ make install || exit 1
 echo "#############################"
 echo "# ABC"
 
-cd $EDA_SRCDIR/berkeley-berkeley-abc-abc
+#cd $EDA_SRCDIR/berkeley-berkeley-abc-abc
+cd $EDA_SRCDIR/yale-rmanohar-abc
 
 cp copyright.txt $ACT_HOME/license/LICENSE_berkeley-abc
 
-mv $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile.original
-echo "LIBS += -lncurses" > $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile
-echo "CFLAGS += -I${ACT_HOME}/include -L${ACT_HOME}/lib" >> $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile
-echo "LDFLAGS += -L${ACT_HOME}/lib -Wl,-rpath=\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib" >> $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile
-cat $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile.original >> $EDA_SRCDIR/berkeley-berkeley-abc-abc/Makefile
+mv $EDA_SRCDIR/yale-rmanohar-abc/Makefile $EDA_SRCDIR/yale-rmanohar-abc/Makefile.original
+
+echo "LIBS += -lncurses" > $EDA_SRCDIR/yale-rmanohar-abc/Makefile
+echo "CFLAGS += -I${ACT_HOME}/include -L${ACT_HOME}/lib" >> $EDA_SRCDIR/yale-rmanohar-abc/Makefile
+echo "LDFLAGS += -L${ACT_HOME}/lib -Wl,-rpath=\\$\$ORIGIN/../lib,-rpath=$ACT_HOME/lib" >> $EDA_SRCDIR/yale-rmanohar-abc/Makefile
+cat $EDA_SRCDIR/yale-rmanohar-abc/Makefile.original >> $EDA_SRCDIR/yale-rmanohar-abc/Makefile
 make ABC_USE_LIBSTDCXX=1 -j || exit 1
 # so build broken but probably not used
 #make -j ABC_USE_PIC=1 libabc.so || exit 1

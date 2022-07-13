@@ -25,10 +25,16 @@ fi
 echo "#############################"
 echo "# abc"
 
-if [ ! -d "$EDA_SRCDIR/berkeley-berkeley-abc-abc" ]; then
+#if [ ! -d "$EDA_SRCDIR/berkeley-berkeley-abc-abc" ]; then
+#cd $EDA_SRCDIR
+#  git clone --depth 1 --branch master https://github.com/berkeley-abc/abc.git
+#  mv abc $EDA_SRCDIR/berkeley-berkeley-abc-abc
+#fi
+
+if [ ! -d "$EDA_SRCDIR/yale-rmanohar-abc" ]; then
 cd $EDA_SRCDIR
-  git clone --depth 1 --branch master https://github.com/berkeley-abc/abc.git
-  mv abc $EDA_SRCDIR/berkeley-berkeley-abc-abc
+  git clone --depth 1 --branch master https://github.com/rmanohar/abc.git
+  mv abc $EDA_SRCDIR/yale-rmanohar-abc
 fi
 
 echo "#############################"

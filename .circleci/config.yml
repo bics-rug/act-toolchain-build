@@ -9,7 +9,7 @@ jobs:
        - checkout
        - restore_cache:
           keys: 
-               - v3-dependencies
+               - v4-dependencies
        - run:
           name: check build tools
           command: |
@@ -41,7 +41,7 @@ jobs:
               for file in 01*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR
        - save_cache:
-          key: v3-dependencies
+          key: v4-dependencies
           paths:
               - /var/cache/yum
               - src/libedit
@@ -50,7 +50,7 @@ jobs:
               - src/mit-fftw-fftw
               - cmake
        - save_cache:
-          key: v3-dependencies-light
+          key: v4-dependencies-light
           paths:
               - /var/cache/yum
               - cmake
@@ -87,7 +87,7 @@ jobs:
           at: ./
        - restore_cache:
           keys: 
-               - v3-dependencies-light
+               - v4-dependencies-light
        - run:
           name: check build tools
           command: |
@@ -135,7 +135,7 @@ jobs:
           at: ./
        - restore_cache:
           keys: 
-               - v3-dependencies-light
+               - v4-dependencies-light
        - run:
           name: check build tools
           command: |
@@ -183,7 +183,7 @@ jobs:
           at: ./
        - restore_cache:
           keys: 
-               - v3-dependencies-light
+               - v4-dependencies-light
        - run:
           name: check build tools
           command: |
@@ -655,6 +655,22 @@ workflows:
         -  test-fedora-latest:
              requires:
                - build-centos7
+        -  upload-centos7:
+             requires:
+               - build-centos7
+               - test-centos7
+               - test-rhel8
+               - test-debian-stable
+               - test-debian-oldstable
+               - test-debian-oldoldstable
+               - test-ubuntu22
+               - test-ubuntu20
+               - test-ubuntu18
+               - test-ubuntu16
+               - test-opensuse15
+               - test-archlinux
+               - test-fedora-20
+               - test-fedora-latest
                
         # for testing fully lib independed only libc
         #-  test-alpine:

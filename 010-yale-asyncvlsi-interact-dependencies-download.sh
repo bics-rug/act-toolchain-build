@@ -13,7 +13,7 @@ cd $EDA_SRCDIR
     wget --quiet https://github.com/bics-rug/act-toolchain-prebuildfiles/raw/master/boost_1_79_0-prebuild.tar.gz
     echo "e95dc0ea473b73ef036b0b1a16d9a775db73665aefbcbc1745440ccb571f1c15 boost_1_79_0-prebuild.tar.gz" | sha256sum --check || exit 1
     mkdir $EDA_SRCDIR/org-boostorg-boost-prebuild
-    tar -C "$EDA_SRCDIR/org-boostorg-boost-prebuild" --strip-components=2 -xf boost_1_79_0-prebuild.tar.gz
+    tar -C "$EDA_SRCDIR/org-boostorg-boost-prebuild" --strip-components=1 -xf boost_1_79_0-prebuild.tar.gz
     rm boost_1_79_0-prebuild.tar.gz
   fi
     echo "download & check"
