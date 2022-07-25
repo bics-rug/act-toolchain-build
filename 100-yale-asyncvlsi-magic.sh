@@ -26,5 +26,5 @@ cp LICENSE $ACT_HOME/license/LICENSE_yale-asyncvlsi-magic
 make || exit 1
 make install || exit 1
 
-sed -i 's/TCL_MAG_DIR=\$\{CAD_ROOT\}\/magic\/tcl/TCL_MAG_DIR=\$\{ACT_HOME\}\/lib\/magic\/tcl/' $ACT_HOME/bin/magic
-sed -i 's/\/root\/projects\/act/\${ACT_HOME}/g' $ACT_HOME/bin/magic
+sed -i 's/TCL_MAG_DIR=\${CAD_ROOT}\/magic\/tcl/TCL_MAG_DIR=\${ACT_HOME}\/lib\/magic\/tcl/' $ACT_HOME/bin/magic
+sed -i 's/\/root\/project\/act/\${ACT_HOME}/g' $ACT_HOME/bin/magic

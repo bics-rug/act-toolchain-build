@@ -15,11 +15,7 @@ jobs:
           command: |
                set +e
                date
-               yum install -y centos-release-scl git wget
-               yum-config-manager --enable rhel-server-rhscl-7-rpms
-               echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh patch | cat" | bash
-               echo "install done"
+               bash centos7_install_build_system.sh
                source ci_build_environment_centos7.sh
                echo "environment done"
                bash check_build_environment.sh || exit 1
@@ -93,11 +89,7 @@ jobs:
           command: |
                set +e
                date
-               yum install -y centos-release-scl git wget
-               yum-config-manager --enable rhel-server-rhscl-7-rpms
-               echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
-               echo "install done"
+               bash centos7_install_build_system.sh
                source ci_build_environment_centos7.sh
                echo "environment done"
                bash check_build_environment.sh || exit 1
@@ -141,11 +133,7 @@ jobs:
           command: |
                set +e
                date
-               yum install -y centos-release-scl git wget
-               yum-config-manager --enable rhel-server-rhscl-7-rpms
-               echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
-               echo "install done"
+               bash centos7_install_build_system.sh
                source ci_build_environment_centos7.sh
                echo "environment done"
                bash check_build_environment.sh || exit 1
@@ -189,11 +177,7 @@ jobs:
           command: |
                set +e
                date
-               yum install -y centos-release-scl git wget
-               yum-config-manager --enable rhel-server-rhscl-7-rpms
-               echo "repo setup"
-               echo "yum install -y devtoolset-11 m4 autoconf automake bison flex libtool python3 csh | cat" | bash
-               echo "install done"
+               bash centos7_install_build_system.sh
                source ci_build_environment_centos7.sh
                echo "environment done"
                bash check_build_environment.sh || exit 1
@@ -240,9 +224,7 @@ jobs:
           command: |
               set +e
               source ci_build_environment_centos7.sh
-              # graphic libraries are not shipped in the package
-              export BUILD_GUI="true"
-              echo "yum install -y libX11-devel mesa-libGL-devel mesa-libGLU-devel | cat" | bash
+              source centos7_install_build_system_gui.sh
               for file in 10*; do echo $file; bash $file || exit 1; done
               cd $WORK_DIR 
        - run: 
